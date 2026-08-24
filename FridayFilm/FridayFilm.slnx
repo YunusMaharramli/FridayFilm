@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Core/">
+    <Project Path="Core/FridayFilm.Application/FridayFilm.Application.csproj" />
+    <Project Path="Core/FridayFilm.Domain/FridayFilm.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="Infrastructure/FridayFilm.Infrastructure/FridayFilm.Infrastructure.csproj" />
+    <Project Path="Infrastructure/FridayFilm.Persistence/FridayFilm.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/src/Presentation/">
+    <Project Path="Presentation/FridayFilm.WebApi/FridayFilm.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
