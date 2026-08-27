@@ -10,5 +10,9 @@ namespace FridayFilm.Domain.Entities
         public Gender Gender { get; set; }
         public string? Nickname { get; set; }
         public string? Bio { get; set; }
+        public List<Movie> Movies { get; set; } = new();
+
+       
+      
     }
 }

@@ -4,5 +4,9 @@ namespace FridayFilm.Domain.Entities;
 
 public class Genre : BaseEntity
 {
+
     public string Name { get; set; } = string.Empty;
+    public List<Movie> Movies { get; set; } = new();
+   
+
 }

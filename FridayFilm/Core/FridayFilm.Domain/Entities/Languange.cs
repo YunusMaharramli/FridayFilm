@@ -6,4 +6,8 @@ namespace FridayFilm.Domain.Entities;
 public class Language : BaseEntity
 {
     public Lang Lang { get; set; }
+    public List<Movie> Movies { get; set; } = new();
+
+
+  
 }

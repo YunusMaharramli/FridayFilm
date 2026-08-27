@@ -7,4 +7,5 @@ public class FilmImage : BaseEntity
 {
     public string PhotoUrl { get; set; } = string.Empty;
     public Guid MovieId { get; set; }
+    public Movie Movie { get; set; } = null!;
 }
