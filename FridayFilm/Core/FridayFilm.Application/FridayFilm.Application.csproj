@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Dtos\" />
-    <Folder Include="Abstracts\" />
     <Folder Include="Validations\" />
   </ItemGroup>
 
