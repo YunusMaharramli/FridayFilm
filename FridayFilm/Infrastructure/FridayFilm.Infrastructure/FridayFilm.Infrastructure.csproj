@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\FridayFilm.Application\FridayFilm.Application.csproj" />
     <ProjectReference Include="..\..\Core\FridayFilm.Domain\FridayFilm.Domain.csproj" />
   </ItemGroup>
 

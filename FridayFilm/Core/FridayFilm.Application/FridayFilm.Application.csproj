@@ -8,8 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Dtos\" />
-    <Folder Include="Abstracts\" />
     <Folder Include="Validations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FridayFilm.Domain\FridayFilm.Domain.csproj" />
   </ItemGroup>
 
 </Project>
