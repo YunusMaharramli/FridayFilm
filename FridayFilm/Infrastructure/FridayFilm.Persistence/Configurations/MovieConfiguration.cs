@@ -49,7 +49,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         
         builder.HasMany(m => m.Actors)
                .WithMany(a => a.Movies);
-              
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
 
     }
 }

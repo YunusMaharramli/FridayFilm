@@ -15,6 +15,7 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .HasMaxLength(100);
         builder.HasMany(g => g.Movies)
                .WithMany(m => m.Genres);
-           
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
     }
 }

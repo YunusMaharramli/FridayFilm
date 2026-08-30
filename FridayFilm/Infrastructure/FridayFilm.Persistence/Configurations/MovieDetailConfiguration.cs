@@ -16,6 +16,7 @@ public class MovieDetailConfiguration : IEntityTypeConfiguration<MovieDetail>
         builder.Property(md => md.TrailerUrl)
             .IsRequired()
             .HasMaxLength(500);
+        builder.HasQueryFilter(x => !x.IsDeleted);
 
     }
 }

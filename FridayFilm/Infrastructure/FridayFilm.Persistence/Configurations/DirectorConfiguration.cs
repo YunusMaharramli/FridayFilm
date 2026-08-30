@@ -22,6 +22,6 @@ public class DirectorConfiguration : IEntityTypeConfiguration<Director>
         builder.Property(d => d.Bio)
             .HasMaxLength(2000);
 
-     
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

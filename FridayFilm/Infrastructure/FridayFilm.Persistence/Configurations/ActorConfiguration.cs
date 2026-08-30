@@ -25,6 +25,6 @@ public class ActorConfiguration : IEntityTypeConfiguration<Actor>
         builder.Property(a => a.Bio)
             .HasMaxLength(2000);
 
-    
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }
