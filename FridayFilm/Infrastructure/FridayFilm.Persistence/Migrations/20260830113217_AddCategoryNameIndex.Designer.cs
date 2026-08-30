@@ -3,6 +3,7 @@ using System;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
-    partial class FridayFilmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260830113217_AddCategoryNameIndex")]
+    partial class AddCategoryNameIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,19 +113,12 @@ namespace FridayFilm.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
