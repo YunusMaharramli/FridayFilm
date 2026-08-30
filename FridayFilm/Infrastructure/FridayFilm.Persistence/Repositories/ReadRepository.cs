@@ -1,6 +1,6 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Domain.Common;
-using FridayFilm.Infrastructure.Contexts;
+using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FridayFilm.Infrastructure;
+namespace FridayFilm.Persistence;
 
 public static class ServiceCollectionExtentions
 {

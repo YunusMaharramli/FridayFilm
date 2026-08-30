@@ -3,7 +3,7 @@ using FridayFilm.Domain.Enums; // Gender enum-u tanıması üçün bu using əla
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class ActorConfiguration : IEntityTypeConfiguration<Actor>
 {

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\FridayFilm.Infrastructure\FridayFilm.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FridayFilm.Persistence\FridayFilm.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

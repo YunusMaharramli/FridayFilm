@@ -1,5 +1,5 @@
-using FridayFilm.Infrastructure;
-using FridayFilm.Infrastructure.Contexts;
+using FridayFilm.Persistence;
+using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

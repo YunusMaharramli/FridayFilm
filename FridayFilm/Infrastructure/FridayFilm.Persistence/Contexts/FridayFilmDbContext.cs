@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace FridayFilm.Infrastructure.Contexts;
+namespace FridayFilm.Persistence.Contexts;
 
 public class FridayFilmDbContext:DbContext
 {
