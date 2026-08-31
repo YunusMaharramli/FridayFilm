@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class GenreConfiguration : IEntityTypeConfiguration<Genre>
 {
@@ -15,6 +15,7 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .HasMaxLength(100);
         builder.HasMany(g => g.Movies)
                .WithMany(m => m.Genres);
-           
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
     }
 }

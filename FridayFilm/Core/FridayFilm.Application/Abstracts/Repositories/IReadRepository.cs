@@ -19,4 +19,5 @@ public interface IReadRepository<TEntity>
         CancellationToken cancellationToken = default
         );
     IQueryable<TEntity> Query();
+    Task<int> GetCountAsync(Expression<Func<TEntity, bool>>? predicate = null);
 }

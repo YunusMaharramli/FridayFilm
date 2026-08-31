@@ -3,7 +3,7 @@ using FridayFilm.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class DirectorConfiguration : IEntityTypeConfiguration<Director>
 {
@@ -22,6 +22,6 @@ public class DirectorConfiguration : IEntityTypeConfiguration<Director>
         builder.Property(d => d.Bio)
             .HasMaxLength(2000);
 
-     
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

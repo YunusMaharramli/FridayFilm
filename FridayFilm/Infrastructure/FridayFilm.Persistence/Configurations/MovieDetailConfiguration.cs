@@ -1,8 +1,7 @@
 ﻿using FridayFilm.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class MovieDetailConfiguration : IEntityTypeConfiguration<MovieDetail>
 {
@@ -17,6 +16,7 @@ public class MovieDetailConfiguration : IEntityTypeConfiguration<MovieDetail>
         builder.Property(md => md.TrailerUrl)
             .IsRequired()
             .HasMaxLength(500);
+        builder.HasQueryFilter(x => !x.IsDeleted);
 
     }
 }

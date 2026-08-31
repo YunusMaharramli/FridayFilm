@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
@@ -49,7 +49,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         
         builder.HasMany(m => m.Actors)
                .WithMany(a => a.Movies);
-              
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
 
     }
 }

@@ -1,8 +1,7 @@
 ﻿using FridayFilm.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 {
@@ -14,5 +13,6 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
         // amma yenə də qayda olaraq açıq-aydın qeyd edirik:
         builder.Property(l => l.Lang)
             .IsRequired();
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

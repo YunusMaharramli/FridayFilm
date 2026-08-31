@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FridayFilm.Infrastructure.Configurations;
+namespace FridayFilm.Persistence.Configurations;
 
 public class FilmImageConfiguration : IEntityTypeConfiguration<FilmImage>
 {
@@ -12,5 +12,6 @@ public class FilmImageConfiguration : IEntityTypeConfiguration<FilmImage>
         builder.Property(f => f.PhotoUrl)
             .IsRequired()
             .HasMaxLength(500);
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }
