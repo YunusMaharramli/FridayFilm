@@ -27,4 +27,9 @@
     <ProjectReference Include="..\..\Infrastructure\FridayFilm.Persistence\FridayFilm.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 </Project>

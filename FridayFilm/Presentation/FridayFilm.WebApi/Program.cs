@@ -1,9 +1,11 @@
+using FridayFilm.Infrastructure;
 using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddInfrastructure();
 builder.Services.AddPersistence();
 builder.Services.AddControllers();
 
@@ -28,7 +30,7 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // localhost:port yazan kimi birbaşa Swagger açılsın
     });
 }
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
