@@ -1,13 +1,16 @@
-﻿using FridayFilm.Domain.Entities;
+﻿using FridayFilm.Application.DTOs.Categories;
+using FridayFilm.Application.Pagination;
 
 namespace FridayFilm.Application.Abstracts.Services;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<Category>> GetAllAsync();
-    Task<Category?> GetByIdAsync(Guid id);
-    Task<Category?> GetBySlugAsync(string slug);
-    Task<IEnumerable<Category>> SearchByNameAsync(string name);
-    Task CreateAsync(Category category);
+    Task<IEnumerable<CategoryResponse>> GetAllAsync();
+    Task<CategoryResponse?> GetByIdAsync(Guid id);
+    Task<CategoryResponse?> GetBySlugAsync(string slug);
+    Task<IEnumerable<CategoryResponse>> SearchByNameAsync(string name);
+    Task CreateAsync(CreateCategoryRequest request);
+    Task<bool> UpdateAsync(Guid id, UpdateCategoryRequest request); // Update bura əlavə olundu
     Task<bool> DeleteAsync(Guid id);
+    Task<PaginatedResponse<CategoryResponse>> GetAllPaginatedAsync(PaginationRequest request);
 }

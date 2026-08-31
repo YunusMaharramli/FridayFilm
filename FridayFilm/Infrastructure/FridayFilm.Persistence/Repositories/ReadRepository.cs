@@ -2,6 +2,7 @@
 using FridayFilm.Domain.Common;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -59,6 +60,17 @@ public class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : 
     public IQueryable<TEntity> Query()
     {
         return _dbSet.AsQueryable();
+    }
+    public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>>? predicate = null)
+    {
+        var query = _dbSet.AsNoTracking(); 
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        return await query.CountAsync();
     }
 }
 

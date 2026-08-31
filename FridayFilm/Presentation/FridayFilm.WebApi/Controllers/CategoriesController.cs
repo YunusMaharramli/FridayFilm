@@ -1,5 +1,6 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
-using FridayFilm.Domain.Entities;
+using FridayFilm.Application.DTOs.Categories;
+using FridayFilm.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridayFilm.WebApi.Controllers
@@ -15,12 +16,13 @@ namespace FridayFilm.WebApi.Controllers
             _categoryService = categoryService;
         }
 
+ 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
         {
-            return Ok(await _categoryService.GetAllAsync());
+            var result = await _categoryService.GetAllPaginatedAsync(request);
+            return Ok(result);
         }
-
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -38,18 +40,22 @@ namespace FridayFilm.WebApi.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> SearchByName([FromQuery] string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return BadRequest("Axtarış üçün kateqoriya adı daxil edilməlidir.");
-
             var categories = await _categoryService.SearchByNameAsync(name);
             return !categories.Any() ? NotFound("Bu ada uyğun kateqoriya tapılmadı.") : Ok(categories);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Category category)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
         {
-            await _categoryService.CreateAsync(category);
+            await _categoryService.CreateAsync(request);
             return StatusCode(201, "Kateqoriya uğurla yaradıldı.");
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request)
+        {
+            var result = await _categoryService.UpdateAsync(id, request);
+            return result ? Ok("Kateqoriya uğurla yeniləndi.") : NotFound("Kateqoriya tapılmadı.");
         }
 
         [HttpDelete("{id:guid}")]
