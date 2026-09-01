@@ -1,6 +1,6 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
-using FridayFilm.Application.DTOs.Categories;
+using FridayFilm.Application.Dtos.CategoryDtos;
 using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
@@ -93,7 +93,7 @@ public class CategoryService : ICategoryService
             return false;
 
         category.Name = request.Name;
-        category.Slug = request.Name.ToSlug(); // Ad dəyişirsə, Slug da yenilənir
+        category.Slug = request.Name.ToSlug(); 
 
         _writeRepository.Update(category);
         await _writeRepository.SaveChangeAsync();

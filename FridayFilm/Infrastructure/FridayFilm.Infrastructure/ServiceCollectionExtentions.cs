@@ -12,6 +12,7 @@ public static class ServiceCollectionExtentions
         this IServiceCollection services)
     {
         services.AddScoped<IFileService, LocalFileService>();
+       
         return services;
     }
 }

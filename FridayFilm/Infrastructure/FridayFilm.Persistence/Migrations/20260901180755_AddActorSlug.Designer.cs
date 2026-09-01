@@ -3,6 +3,7 @@ using System;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
-    partial class FridayFilmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260901180755_AddActorSlug")]
+    partial class AddActorSlug
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,91 +38,6 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasIndex("MoviesId");
 
                     b.ToTable("ActorMovie");
-                });
-
-            modelBuilder.Entity("Director", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Bio")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Nationality")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique();
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
-
-                    b.ToTable("Directors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("22222222-3333-4444-5555-666666666601"),
-                            Bio = "Known for complex narratives like Inception, Interstellar, and Oppenheimer.",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FullName = "Christopher Nolan",
-                            Gender = 1,
-                            IsDeleted = false,
-                            Nationality = "British-American",
-                            Slug = "christopher-nolan"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-3333-4444-5555-666666666602"),
-                            Bio = "Famous for non-linear storylines and stylized violence in films like Pulp Fiction.",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FullName = "Quentin Tarantino",
-                            Gender = 1,
-                            IsDeleted = false,
-                            Nationality = "American",
-                            Slug = "quentin-tarantino"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-3333-4444-5555-666666666603"),
-                            Bio = "Acclaimed director of Lady Bird, Little Women, and Barbie.",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FullName = "Greta Gerwig",
-                            Gender = 2,
-                            IsDeleted = false,
-                            Nationality = "American",
-                            Slug = "greta-gerwig"
-                        });
                 });
 
             modelBuilder.Entity("DirectorMovie", b =>
@@ -467,6 +385,49 @@ namespace FridayFilm.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FridayFilm.Domain.Entities.Director", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Fullname")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
+
+                    b.ToTable("Directors");
+                });
+
             modelBuilder.Entity("FridayFilm.Domain.Entities.FilmImage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -657,19 +618,9 @@ namespace FridayFilm.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Director", b =>
-                {
-                    b.HasOne("FridayFilm.Domain.Entities.FilmImage", "Image")
-                        .WithOne()
-                        .HasForeignKey("Director", "ImageId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("DirectorMovie", b =>
                 {
-                    b.HasOne("Director", null)
+                    b.HasOne("FridayFilm.Domain.Entities.Director", null)
                         .WithMany()
                         .HasForeignKey("DirectorsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -688,6 +639,17 @@ namespace FridayFilm.Infrastructure.Migrations
                         .WithOne()
                         .HasForeignKey("FridayFilm.Domain.Entities.Actor", "ImageId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Image");
+                });
+
+            modelBuilder.Entity("FridayFilm.Domain.Entities.Director", b =>
+                {
+                    b.HasOne("FridayFilm.Domain.Entities.FilmImage", "Image")
+                        .WithOne()
+                        .HasForeignKey("FridayFilm.Domain.Entities.Director", "ImageId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Image");
                 });

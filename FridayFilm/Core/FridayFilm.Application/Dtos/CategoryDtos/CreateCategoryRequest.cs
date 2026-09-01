@@ -1,4 +1,4 @@
-﻿namespace FridayFilm.Application.DTOs.Categories;
+﻿namespace FridayFilm.Application.Dtos.CategoryDtos;
 
 public class CreateCategoryRequest
 {

@@ -3,6 +3,7 @@ using System;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
-    partial class FridayFilmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260901182022_addedslugdirector")]
+    partial class addedslugdirector
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,41 +88,6 @@ namespace FridayFilm.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Directors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("22222222-3333-4444-5555-666666666601"),
-                            Bio = "Known for complex narratives like Inception, Interstellar, and Oppenheimer.",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FullName = "Christopher Nolan",
-                            Gender = 1,
-                            IsDeleted = false,
-                            Nationality = "British-American",
-                            Slug = "christopher-nolan"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-3333-4444-5555-666666666602"),
-                            Bio = "Famous for non-linear storylines and stylized violence in films like Pulp Fiction.",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FullName = "Quentin Tarantino",
-                            Gender = 1,
-                            IsDeleted = false,
-                            Nationality = "American",
-                            Slug = "quentin-tarantino"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-3333-4444-5555-666666666603"),
-                            Bio = "Acclaimed director of Lady Bird, Little Women, and Barbie.",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FullName = "Greta Gerwig",
-                            Gender = 2,
-                            IsDeleted = false,
-                            Nationality = "American",
-                            Slug = "greta-gerwig"
-                        });
                 });
 
             modelBuilder.Entity("DirectorMovie", b =>

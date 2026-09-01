@@ -1,5 +1,5 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
-using FridayFilm.Application.DTOs.Categories;
+using FridayFilm.Application.Dtos.CategoryDtos;
 using FridayFilm.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
 

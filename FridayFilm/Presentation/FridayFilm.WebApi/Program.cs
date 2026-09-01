@@ -2,17 +2,23 @@ using FridayFilm.Infrastructure;
 using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization; // Enum konvertasiyası üçün mütləqdir
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure();
 builder.Services.AddPersistence();
-builder.Services.AddControllers();
+
+// DƏYİŞİKLİK BURADADIR: Enum-ları mətn kimi oxumaq üçün konfiqurasiya
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 // Swagger üçün lazımlı konfiqurasiyalar
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -30,9 +36,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // localhost:port yazan kimi birbaşa Swagger açılsın
     });
 }
+
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
