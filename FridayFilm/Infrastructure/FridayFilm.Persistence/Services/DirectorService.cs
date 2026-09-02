@@ -5,7 +5,7 @@ using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
 using FridayFilm.Domain.Enums;
-
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace FridayFilm.Application.Services
         public DirectorService(
             IDirectorReadRepository readRepository,
             IDirectorWriteRepository writeRepository,
-            IFileService fileService)
+            [FromKeyedServices("cloudinary")] IFileService fileService)
         {
             _readRepository = readRepository;
             _writeRepository = writeRepository;

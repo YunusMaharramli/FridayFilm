@@ -5,10 +5,7 @@ using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
 using FridayFilm.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FridayFilm.Application.Services;
 
@@ -21,7 +18,7 @@ public class ActorService : IActorService
     public ActorService(
         IActorReadRepository readRepository,
         IActorWriteRepository writeRepository,
-        IFileService fileService)
+        [FromKeyedServices("cloudinary")] IFileService fileService)
     {
         _readRepository = readRepository;
         _writeRepository = writeRepository;
@@ -41,7 +38,7 @@ public class ActorService : IActorService
             Nickname = a.Nickname,
             Bio = a.Bio,
             ImageId = a.ImageId,
-       
+
         });
     }
 
@@ -59,7 +56,7 @@ public class ActorService : IActorService
             Nickname = actor.Nickname,
             Bio = actor.Bio,
             ImageId = actor.ImageId,
-      
+
         };
     }
 
@@ -78,7 +75,7 @@ public class ActorService : IActorService
             Nickname = a.Nickname,
             Bio = a.Bio,
             ImageId = a.ImageId,
-         
+
         });
     }
 
@@ -98,7 +95,7 @@ public class ActorService : IActorService
             Nickname = a.Nickname,
             Bio = a.Bio,
             ImageId = a.ImageId,
-      
+
         }).ToList();
 
         return new PaginatedResponse<ActorResponse>(mappedData, totalCount, request.Page, request.Size);

@@ -2,6 +2,7 @@
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.BioDtos;
 using FridayFilm.Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace FridayFilm.Application.Services
         public BioService(
             IBioReadRepository readRepository,
             IBioWriteRepository writeRepository,
-            IFileService fileService)
+            [FromKeyedServices("cloudinary")] IFileService fileService)
         {
             _readRepository = readRepository;
             _writeRepository = writeRepository;

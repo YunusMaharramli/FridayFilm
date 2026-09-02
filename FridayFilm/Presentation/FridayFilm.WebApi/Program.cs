@@ -1,3 +1,4 @@
+using FridayFilm.Application.Settings;
 using FridayFilm.Infrastructure;
 using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
@@ -6,9 +7,6 @@ using System.Text.Json.Serialization; // Enum konvertasiyası üçün mütləqdi
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure();
-builder.Services.AddPersistence();
-
 // DƏYİŞİKLİK BURADADIR: Enum-ları mətn kimi oxumaq üçün konfiqurasiya
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -16,6 +14,23 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
+builder.Services
+    .AddOptions<CloudinarySettings>()
+    .Bind(builder.Configuration.GetSection(
+        CloudinarySettings.SectionName))
+    .Validate(
+        settings => !string.IsNullOrWhiteSpace(settings.CloudName),
+        "Cloudinary CloudName tələb olunur.")
+    .Validate(
+        settings => !string.IsNullOrWhiteSpace(settings.ApiKey),
+        "Cloudinary ApiKey tələb olunur.")
+    .Validate(
+        settings => !string.IsNullOrWhiteSpace(settings.ApiSecret),
+        "Cloudinary ApiSecret tələb olunur.")
+    .ValidateOnStart();
+
+builder.Services.AddInfrastructure();
+builder.Services.AddPersistence();
 // Swagger üçün lazımlı konfiqurasiyalar
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
