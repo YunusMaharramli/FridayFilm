@@ -25,6 +25,9 @@ public static class ServiceCollectionExtentions
         services.AddScoped<IDirectorService, DirectorService>();
         services.AddScoped<IDirectorReadRepository, DirectorReadRepository>();
         services.AddScoped<IDirectorWriteRepository, DirectorWriteRepository>();
+        services.AddScoped<IBioReadRepository, BioReadRepository>();
+        services.AddScoped<IBioWriteRepository, BioWriteRepository>();
+        services.AddScoped<IBioService, BioService>();
         return services;
     }
 }

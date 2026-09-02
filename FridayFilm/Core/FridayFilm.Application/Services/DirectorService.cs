@@ -5,7 +5,7 @@ using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
 using FridayFilm.Domain.Enums;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,6 +47,7 @@ namespace FridayFilm.Application.Services
         public async Task<DirectorResponse?> GetByIdAsync(Guid id)
         {
             var director = await _readRepository.GetByIdAsync(id);
+
             if (director == null) return null;
 
             return new DirectorResponse

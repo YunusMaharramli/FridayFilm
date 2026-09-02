@@ -12,4 +12,5 @@ public class DirectorResponse
     public string? Bio { get; set; }
     public Gender Gender { get; set; }
     public Guid? ImageId { get; set; }
+  
 }
