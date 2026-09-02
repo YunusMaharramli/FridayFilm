@@ -3,6 +3,7 @@ using System;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
-    partial class FridayFilmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260901183603_AddDirectorSeedData")]
+    partial class AddDirectorSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,64 +311,6 @@ namespace FridayFilm.Infrastructure.Migrations
                             IsDeleted = false,
                             Nationality = "South African",
                             Slug = "charlize-theron"
-                        });
-                });
-
-            modelBuilder.Entity("FridayFilm.Domain.Entities.Bio", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContactEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ContactPhone")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FacebookUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("InstagramUrl")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid?>("LogoId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("TwitterUrl")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LogoId")
-                        .IsUnique();
-
-                    b.ToTable("Bios");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a1b2c3d4-e5f6-7a8b-9c0d-123456789abc"),
-                            ContactEmail = "info@fridayfilm.com",
-                            ContactPhone = "+994 50 123 45 67",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "FridayFilm - Dünyanın ən yaxşı filmlərini kəşf etmək üçün ideal platforma.",
-                            FacebookUrl = "https://facebook.com/fridayfilm",
-                            InstagramUrl = "https://instagram.com/fridayfilm",
-                            IsDeleted = false,
-                            TwitterUrl = "https://twitter.com/fridayfilm"
                         });
                 });
 
@@ -750,16 +695,6 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("FridayFilm.Domain.Entities.Bio", b =>
-                {
-                    b.HasOne("FridayFilm.Domain.Entities.FilmImage", "Logo")
-                        .WithOne("Bio")
-                        .HasForeignKey("FridayFilm.Domain.Entities.Bio", "LogoId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Logo");
-                });
-
             modelBuilder.Entity("FridayFilm.Domain.Entities.FilmImage", b =>
                 {
                     b.HasOne("FridayFilm.Domain.Entities.Movie", "Movie")
@@ -817,11 +752,6 @@ namespace FridayFilm.Infrastructure.Migrations
             modelBuilder.Entity("FridayFilm.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("FridayFilm.Domain.Entities.FilmImage", b =>
-                {
-                    b.Navigation("Bio");
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.Language", b =>

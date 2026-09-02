@@ -1,4 +1,4 @@
-﻿using FridayFilm.Application.DTOs.Categories;
+﻿using FridayFilm.Application.Dtos.CategoryDtos;
 using FridayFilm.Application.Pagination;
 
 namespace FridayFilm.Application.Abstracts.Services;

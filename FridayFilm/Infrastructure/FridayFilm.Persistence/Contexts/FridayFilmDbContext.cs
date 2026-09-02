@@ -22,6 +22,8 @@ public class FridayFilmDbContext:DbContext
     public DbSet<Language> Languages { get; set; }
     public DbSet<FilmImage> FilmImages { get; set; }
     public DbSet<MovieDetail> MovieDetails { get; set; }
+    public DbSet<Bio> Bios { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
