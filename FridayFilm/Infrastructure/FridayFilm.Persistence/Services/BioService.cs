@@ -98,12 +98,25 @@ namespace FridayFilm.Application.Services
             bio.InstagramUrl = request.InstagramUrl;
             bio.FacebookUrl = request.FacebookUrl;
             bio.TwitterUrl = request.TwitterUrl;
-        
 
+         
             if (request.LogoPhoto != null)
             {
+                if (bio.Logo != null && !string.IsNullOrEmpty(bio.Logo.PhotoUrl))
+                {
+                     _fileService.Delete(bio.Logo.PhotoUrl);
+                }
+
                 string photoUrl = await _fileService.UploadAsync("images/logos", request.LogoPhoto);
-                bio.Logo = new FilmImage { PhotoUrl = photoUrl };
+
+                if (bio.Logo != null)
+                {
+                    bio.Logo.PhotoUrl = photoUrl;
+                }
+                else
+                {
+                    bio.Logo = new FilmImage { PhotoUrl = photoUrl };
+                }
             }
 
             _writeRepository.Update(bio);

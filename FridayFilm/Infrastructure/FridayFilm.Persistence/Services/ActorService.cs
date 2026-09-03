@@ -131,6 +131,7 @@ public class ActorService : IActorService
         var actor = await _readRepository.GetByIdAsync(id);
         if (actor == null) return false;
 
+        // 1. Digər məlumatların tam (full) yenilənməsi
         actor.FullName = request.FullName;
         actor.Nationality = request.Nationality;
         actor.Gender = request.Gender;
@@ -138,10 +139,28 @@ public class ActorService : IActorService
         actor.Bio = request.Bio;
         actor.Slug = request.FullName.ToSlug();
 
+        // 2. Şəkil yenilənməsi prosesi
         if (request.Photo != null)
         {
+            // Əgər aktyorun əvvəlcədən şəkli var idisə, köhnəni silirik
+            if (actor.Image != null && !string.IsNullOrEmpty(actor.Image.PhotoUrl))
+            {
+                // Qeyd: IFileService-in içində DeleteAsync metodu yaratdığına əmin ol.
+                 _fileService.Delete(actor.Image.PhotoUrl);
+            }
+
+            // Yeni şəkli Cloudinary-ə yükləyirik
             string photoUrl = await _fileService.UploadAsync("images/actors", request.Photo);
-            actor.Image = new FilmImage { PhotoUrl = photoUrl };
+
+          
+            if (actor.Image != null)
+            {
+                actor.Image.PhotoUrl = photoUrl;
+            }
+            else
+            {
+                actor.Image = new FilmImage { PhotoUrl = photoUrl };
+            }
         }
 
         _writeRepository.Update(actor);

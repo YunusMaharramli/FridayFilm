@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace FridayFilm.API.Controllers
-{
+namespace FridayFilm.WebApi.Controllers;
+
     [Route("api/[controller]")]
     [ApiController]
     public class BiosController : ControllerBase
@@ -58,4 +58,3 @@ namespace FridayFilm.API.Controllers
             return NoContent();
         }
     }
-}

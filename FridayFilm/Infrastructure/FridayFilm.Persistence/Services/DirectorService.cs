@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace FridayFilm.Application.Services
 {
@@ -151,10 +152,24 @@ namespace FridayFilm.Application.Services
             director.Bio = request.Bio;
             director.Slug = request.FullName.ToSlug();
 
+            // Şəkil yenilənməsi və köhnənin silinməsi
             if (request.Photo != null)
             {
+                if (director.Image != null && !string.IsNullOrEmpty(director.Image.PhotoUrl))
+                {
+                     _fileService.Delete(director.Image.PhotoUrl);
+                }
+
                 string photoUrl = await _fileService.UploadAsync("images/directors", request.Photo);
-                director.Image = new FilmImage { PhotoUrl = photoUrl };
+
+                if (director.Image != null)
+                {
+                    director.Image.PhotoUrl = photoUrl;
+                }
+                else
+                {
+                    director.Image = new FilmImage { PhotoUrl = photoUrl };
+                }
             }
 
             _writeRepository.Update(director);
