@@ -2,6 +2,7 @@ using FridayFilm.Application.Settings;
 using FridayFilm.Infrastructure;
 using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
+using FridayFilm.WebApi.ExceptionHandlers;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization; // Enum konvertasiyası üçün mütləqdir
 
@@ -40,6 +41,7 @@ builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 });
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())
 {

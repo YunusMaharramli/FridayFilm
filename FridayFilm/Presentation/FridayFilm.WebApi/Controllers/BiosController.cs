@@ -24,12 +24,10 @@ namespace FridayFilm.API.Controllers
             return Ok(bios);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var bio = await _bioService.GetByIdAsync(id);
-            if (bio == null) return NotFound("Sayt məlumatı tapılmadı.");
-
             return Ok(bio);
         }
 
@@ -40,21 +38,17 @@ namespace FridayFilm.API.Controllers
             return StatusCode(201, "Sayt məlumatı uğurla yaradıldı");
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromForm] UpdateBioRequest request)
         {
-            var result = await _bioService.UpdateAsync(id, request);
-            if (!result) return NotFound("Yenilənməli olan məlumat tapılmadı.");
-
+            await _bioService.UpdateAsync(id, request);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _bioService.DeleteAsync(id);
-            if (!result) return NotFound("Silinməli olan məlumat tapılmadı.");
-
+            await _bioService.DeleteAsync(id);
             return NoContent();
         }
     }

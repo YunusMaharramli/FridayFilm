@@ -1,6 +1,7 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.ActorsDtos;
+using FridayFilm.Application.Exceptions;
 using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
@@ -42,10 +43,12 @@ public class ActorService : IActorService
         });
     }
 
-    public async Task<ActorResponse?> GetByIdAsync(Guid id)
+    public async Task<ActorResponse> GetByIdAsync(Guid id)
     {
-        var actor = await _readRepository.GetByIdAsync(id);
-        if (actor == null) return null;
+        var actor = await _readRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException(
+                $"Actor with ID '{id}' was not found.");
+
 
         return new ActorResponse
         {
@@ -64,7 +67,12 @@ public class ActorService : IActorService
 
     public async Task<IEnumerable<ActorResponse>> SearchByNameAsync(string name)
     {
-        var actors = await _readRepository.GetAllAsync(x => x.FullName.ToLower().Contains(name.ToLower()));
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ValidationException("Actor name cannot be empty.");
+
+        var actors = await _readRepository.GetAllAsync(
+            x => x.FullName.ToLower().Contains(name.ToLower()));
+
 
         return actors.Select(a => new ActorResponse
         {
@@ -81,6 +89,9 @@ public class ActorService : IActorService
 
     public async Task<PaginatedResponse<ActorResponse>> GetAllPaginatedAsync(PaginationRequest request)
     {
+        if (request.Page < 1 || request.Size < 1)
+            throw new ValidationException("Page and size must be greater than zero.");
+
         int totalCount = await _readRepository.GetCountAsync();
         int skip = (request.Page - 1) * request.Size;
 
@@ -103,6 +114,9 @@ public class ActorService : IActorService
 
     public async Task CreateAsync(CreateActorRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.FullName))
+            throw new ValidationException("Actor full name cannot be empty.");
+
         FilmImage? newImage = null;
 
         if (request.Photo != null)
@@ -126,10 +140,14 @@ public class ActorService : IActorService
         await _writeRepository.SaveChangeAsync();
     }
 
-    public async Task<bool> UpdateAsync(Guid id, UpdateActorRequest request)
+    public async Task UpdateAsync(Guid id, UpdateActorRequest request)
     {
-        var actor = await _readRepository.GetByIdAsync(id);
-        if (actor == null) return false;
+        var actor = await _readRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException(
+                $"Actor with ID '{id}' was not found.");
+
+        if (string.IsNullOrWhiteSpace(request.FullName))
+            throw new ValidationException("Actor full name cannot be empty.");
 
         actor.FullName = request.FullName;
         actor.Nationality = request.Nationality;
@@ -146,18 +164,15 @@ public class ActorService : IActorService
 
         _writeRepository.Update(actor);
         await _writeRepository.SaveChangeAsync();
-
-        return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        var actor = await _readRepository.GetByIdAsync(id);
-        if (actor == null) return false;
+        var actor = await _readRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException(
+                $"Actor with ID '{id}' was not found.");
 
         _writeRepository.Delete(actor);
         await _writeRepository.SaveChangeAsync();
-
-        return true;
     }
 }

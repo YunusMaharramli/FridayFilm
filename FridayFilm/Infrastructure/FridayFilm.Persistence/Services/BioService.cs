@@ -1,6 +1,7 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.BioDtos;
+using FridayFilm.Application.Exceptions;
 using FridayFilm.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -43,11 +44,11 @@ namespace FridayFilm.Application.Services
             });
         }
 
-        public async Task<BioResponse?> GetByIdAsync(Guid id)
+        public async Task<BioResponse> GetByIdAsync(Guid id)
         {
-            var bio = await _readRepository.GetByIdAsync(id);
-
-            if (bio == null) return null;
+            var bio = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Bio with ID '{id}' was not found.");
 
             return new BioResponse
             {
@@ -87,10 +88,11 @@ namespace FridayFilm.Application.Services
             await _writeRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> UpdateAsync(Guid id, UpdateBioRequest request)
+        public async Task UpdateAsync(Guid id, UpdateBioRequest request)
         {
-            var bio = await _readRepository.GetByIdAsync(id);
-            if (bio == null) return false;
+            var bio = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Bio with ID '{id}' was not found.");
 
             bio.Description = request.Description;
             bio.ContactPhone = request.ContactPhone;
@@ -109,18 +111,17 @@ namespace FridayFilm.Application.Services
             _writeRepository.Update(bio);
             await _writeRepository.SaveChangeAsync();
 
-            return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            var bio = await _readRepository.GetByIdAsync(id);
-            if (bio == null) return false;
+            var bio = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Bio with ID '{id}' was not found.");
 
             _writeRepository.Delete(bio);
             await _writeRepository.SaveChangeAsync();
 
-            return true;
         }
     }
 }
