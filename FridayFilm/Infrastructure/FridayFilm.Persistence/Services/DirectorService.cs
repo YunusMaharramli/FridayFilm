@@ -146,18 +146,35 @@ namespace FridayFilm.Application.Services
             var director = await _readRepository.GetByIdAsync(id);
             if (director == null) return false;
 
-            director.FullName = request.FullName;
-            director.Nationality = request.Nationality;
-            director.Gender = request.Gender ?? director.Gender;
-            director.Bio = request.Bio;
-            director.Slug = request.FullName.ToSlug();
+            // 1. Slug və Adın yoxlanılması
+            if (!string.IsNullOrWhiteSpace(request.FullName) && director.FullName != request.FullName)
+            {
+                director.FullName = request.FullName;
+                director.Slug = request.FullName.ToSlug();
+            }
 
-            // Şəkil yenilənməsi və köhnənin silinməsi
+            // 2. Boş gəlməyibsə köhnəni əzib yenisini yazırıq
+            if (!string.IsNullOrWhiteSpace(request.Nationality))
+            {
+                director.Nationality = request.Nationality;
+            }
+
+            if (request.Gender.HasValue)
+            {
+                director.Gender = request.Gender.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Bio))
+            {
+                director.Bio = request.Bio;
+            }
+
+            // 3. Şəkil yenilənməsi və köhnənin silinməsi
             if (request.Photo != null)
             {
                 if (director.Image != null && !string.IsNullOrEmpty(director.Image.PhotoUrl))
                 {
-                     _fileService.Delete(director.Image.PhotoUrl);
+                    _fileService.Delete(director.Image.PhotoUrl);
                 }
 
                 string photoUrl = await _fileService.UploadAsync("images/directors", request.Photo);

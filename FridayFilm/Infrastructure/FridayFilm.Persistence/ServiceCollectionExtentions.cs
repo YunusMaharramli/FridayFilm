@@ -4,9 +4,7 @@ using FridayFilm.Application.Services;
 using FridayFilm.Infrastructure.Repositories;
 using FridayFilm.Persistence.Repositories;
 using FridayFilm.Persistence.Services;
-
 using Microsoft.Extensions.DependencyInjection;
-
 
 namespace FridayFilm.Persistence;
 
@@ -43,6 +41,10 @@ public static class ServiceCollectionExtentions
         services.AddScoped<IMovieDetailReadRepository, MovieDetailReadRepository>();
         services.AddScoped<IMovieDetailWriteRepository, MovieDetailWriteRepository>();
         services.AddScoped<IMovieDetailService, MovieDetailService>();
+
+        // Image & Gallery (Yeni əlavə edilənlər)
+        services.AddScoped<IFilmImageReadRepository, FilmImageReadRepository>();
+        services.AddScoped<IImageService, ImageService>();
 
         return services;
     }
