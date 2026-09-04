@@ -1,18 +1,35 @@
+using FluentValidation.AspNetCore; // YENİ: AutoValidation üçün mütləqdir
+using FridayFilm.Application;
 using FridayFilm.Application.Settings;
 using FridayFilm.Infrastructure;
 using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
+using FridayFilm.WebApi.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization; // Enum konvertasiyası üçün mütləqdir
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DƏYİŞİKLİK BURADADIR: Enum-ları mətn kimi oxumaq üçün konfiqurasiya
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+builder.Services.AddControllers(options =>
+{
+    // Yaratdığımız ValidationFilter-i bütün Controller-lərə qlobal tətbiq edirik
+    options.Filters.Add<ValidationFilter>();
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+// YENİ ƏLAVƏ EDİLƏN KOD: Validatorların avtomatik işə düşməsi üçün
+builder.Services.AddFluentValidationAutoValidation();
+
+// .NET-in öz avtomatik xəta qaytarma mexanizmini bağlayırıq ki, 
+// yalnız bizim yazdığımız səliqəli ValidationFilter işləsin
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services
     .AddOptions<CloudinarySettings>()
@@ -31,9 +48,12 @@ builder.Services
 
 builder.Services.AddInfrastructure();
 builder.Services.AddPersistence();
-// Swagger üçün lazımlı konfiqurasiyalar
+
+builder.Services.AddApplicationServices();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -56,4 +76,5 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
