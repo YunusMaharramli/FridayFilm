@@ -1,6 +1,7 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.DirectorsDtos;
+using FridayFilm.Application.Exceptions;
 using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace FridayFilm.Application.Services
 {
@@ -44,11 +46,11 @@ namespace FridayFilm.Application.Services
             });
         }
 
-        public async Task<DirectorResponse?> GetByIdAsync(Guid id)
+        public async Task<DirectorResponse> GetByIdAsync(Guid id)
         {
-            var director = await _readRepository.GetByIdAsync(id);
-
-            if (director == null) return null;
+            var director = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Director with ID '{id}' was not found.");
 
             return new DirectorResponse
             {
@@ -62,10 +64,11 @@ namespace FridayFilm.Application.Services
             };
         }
 
-        public async Task<DirectorResponse?> GetBySlugAsync(string slug)
+        public async Task<DirectorResponse> GetBySlugAsync(string slug)
         {
-            var director = await _readRepository.GetAsync(x => x.Slug == slug);
-            if (director == null) return null;
+            var director = await _readRepository.GetAsync(x => x.Slug == slug)
+                ?? throw new NotFoundException(
+                    $"Director with slug '{slug}' was not found.");
 
             return new DirectorResponse
             {
@@ -81,6 +84,9 @@ namespace FridayFilm.Application.Services
 
         public async Task<IEnumerable<DirectorResponse>> SearchByNameAsync(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ValidationException("Director name cannot be empty.");
+
             var directors = await _readRepository.GetAllAsync(x => x.FullName.ToLower().Contains(name.ToLower()));
 
             return directors.Select(d => new DirectorResponse
@@ -97,6 +103,9 @@ namespace FridayFilm.Application.Services
 
         public async Task<PaginatedResponse<DirectorResponse>> GetAllPaginatedAsync(PaginationRequest request)
         {
+            if (request.Page < 1 || request.Size < 1)
+                throw new ValidationException("Page and size must be greater than zero.");
+
             int totalCount = await _readRepository.GetCountAsync();
             int skip = (request.Page - 1) * request.Size;
 
@@ -118,6 +127,9 @@ namespace FridayFilm.Application.Services
 
         public async Task CreateAsync(CreateDirectorRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.FullName))
+                throw new ValidationException("Director full name cannot be empty.");
+
             FilmImage? newImage = null;
 
             if (request.Photo != null)
@@ -140,38 +152,72 @@ namespace FridayFilm.Application.Services
             await _writeRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> UpdateAsync(Guid id, UpdateDirectorRequest request)
+        public async Task UpdateAsync(Guid id, UpdateDirectorRequest request)
         {
-            var director = await _readRepository.GetByIdAsync(id);
-            if (director == null) return false;
+            var director = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Director with ID '{id}' was not found.");
 
-            director.FullName = request.FullName;
-            director.Nationality = request.Nationality;
-            director.Gender = request.Gender ?? director.Gender;
-            director.Bio = request.Bio;
-            director.Slug = request.FullName.ToSlug();
+            if (string.IsNullOrWhiteSpace(request.FullName))
+                throw new ValidationException("Director full name cannot be empty.");
 
+            // 1. Slug və Adın yoxlanılması
+            if (!string.IsNullOrWhiteSpace(request.FullName) && director.FullName != request.FullName)
+            {
+                director.FullName = request.FullName;
+                director.Slug = request.FullName.ToSlug();
+            }
+
+            // 2. Boş gəlməyibsə köhnəni əzib yenisini yazırıq
+            if (!string.IsNullOrWhiteSpace(request.Nationality))
+            {
+                director.Nationality = request.Nationality;
+            }
+
+            if (request.Gender.HasValue)
+            {
+                director.Gender = request.Gender.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Bio))
+            {
+                director.Bio = request.Bio;
+            }
+
+            // 3. Şəkil yenilənməsi və köhnənin silinməsi
             if (request.Photo != null)
             {
+                if (director.Image != null && !string.IsNullOrEmpty(director.Image.PhotoUrl))
+                {
+                    _fileService.Delete(director.Image.PhotoUrl);
+                }
+
                 string photoUrl = await _fileService.UploadAsync("images/directors", request.Photo);
-                director.Image = new FilmImage { PhotoUrl = photoUrl };
+
+                if (director.Image != null)
+                {
+                    director.Image.PhotoUrl = photoUrl;
+                }
+                else
+                {
+                    director.Image = new FilmImage { PhotoUrl = photoUrl };
+                }
             }
 
             _writeRepository.Update(director);
             await _writeRepository.SaveChangeAsync();
 
-            return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            var director = await _readRepository.GetByIdAsync(id);
-            if (director == null) return false;
+            var director = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Director with ID '{id}' was not found.");
 
             _writeRepository.Delete(director);
             await _writeRepository.SaveChangeAsync();
 
-            return true;
         }
     }
 }

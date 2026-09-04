@@ -10,10 +10,10 @@ public interface IDirectorService
 {
     Task<IEnumerable<DirectorResponse>> GetAllAsync();
     Task<PaginatedResponse<DirectorResponse>> GetAllPaginatedAsync(PaginationRequest request);
-    Task<DirectorResponse?> GetByIdAsync(Guid id);
-    Task<DirectorResponse?> GetBySlugAsync(string slug);
+    Task<DirectorResponse> GetByIdAsync(Guid id);
+    Task<DirectorResponse> GetBySlugAsync(string slug);
     Task<IEnumerable<DirectorResponse>> SearchByNameAsync(string name);
     Task CreateAsync(CreateDirectorRequest request);
-    Task<bool> UpdateAsync(Guid id, UpdateDirectorRequest request);
-    Task<bool> DeleteAsync(Guid id);
+    Task UpdateAsync(Guid id, UpdateDirectorRequest request);
+    Task DeleteAsync(Guid id);
 }

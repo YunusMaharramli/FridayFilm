@@ -6,6 +6,7 @@ using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
 using FridayFilm.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
+using FridayFilm.WebApi.ExceptionHandlers;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -60,6 +61,7 @@ builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 });
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())
 {

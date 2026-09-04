@@ -1,6 +1,7 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.Dtos.CategoryDtos;
+using FridayFilm.Application.Exceptions;
 using FridayFilm.Application.Extensions;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Entities;
@@ -33,36 +34,42 @@ public class CategoryService : ICategoryService
         });
     }
 
-    public async Task<CategoryResponse?> GetByIdAsync(Guid id)
+    public async Task<CategoryResponse> GetByIdAsync(Guid id)
     {
-        var c = await _readRepository.GetByIdAsync(id);
-        if (c == null) return null;
+        var category = await _readRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException(
+                $"Category with ID '{id}' was not found.");
 
         return new CategoryResponse
         {
-            Id = c.Id,
-            Name = c.Name,
-            Slug = c.Slug,
-            CreatedDate = c.CreatedDate
+            Id = category.Id,
+            Name = category.Name,
+            Slug = category.Slug,
+            CreatedDate = category.CreatedDate
         };
     }
 
-    public async Task<CategoryResponse?> GetBySlugAsync(string slug)
+    public async Task<CategoryResponse> GetBySlugAsync(string slug)
     {
-        var c = await _readRepository.GetAsync(x => x.Slug == slug);
-        if (c == null) return null;
+        var category = await _readRepository.GetAsync(
+            x => x.Slug == slug)
+            ?? throw new NotFoundException(
+                $"Category with slug '{slug}' was not found.");
 
         return new CategoryResponse
         {
-            Id = c.Id,
-            Name = c.Name,
-            Slug = c.Slug,
-            CreatedDate = c.CreatedDate
+            Id = category.Id,
+            Name = category.Name,
+            Slug = category.Slug,
+            CreatedDate = category.CreatedDate
         };
     }
 
     public async Task<IEnumerable<CategoryResponse>> SearchByNameAsync(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ValidationException("Category name cannot be empty.");
+
         var categories = await _readRepository.GetAllAsync(x => x.Name.Contains(name));
 
         return categories.Select(c => new CategoryResponse
@@ -76,6 +83,9 @@ public class CategoryService : ICategoryService
 
     public async Task CreateAsync(CreateCategoryRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ValidationException("Category name cannot be empty.");
+
         var category = new Category
         {
             Name = request.Name,
@@ -86,32 +96,36 @@ public class CategoryService : ICategoryService
         await _writeRepository.SaveChangeAsync();
     }
 
-    public async Task<bool> UpdateAsync(Guid id, UpdateCategoryRequest request)
+    public async Task UpdateAsync(Guid id, UpdateCategoryRequest request)
     {
-        var category = await _readRepository.GetByIdAsync(id);
-        if (category == null)
-            return false;
+        var category = await _readRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException(
+                $"Category with ID '{id}' was not found.");
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ValidationException("Category name cannot be empty.");
 
         category.Name = request.Name;
         category.Slug = request.Name.ToSlug(); 
 
         _writeRepository.Update(category);
         await _writeRepository.SaveChangeAsync();
-        return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        var category = await _readRepository.GetByIdAsync(id);
-        if (category == null)
-            return false;
+        var category = await _readRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException(
+                $"Category with ID '{id}' was not found.");
 
         _writeRepository.Delete(category);
         await _writeRepository.SaveChangeAsync();
-        return true;
     }
     public async Task<PaginatedResponse<CategoryResponse>> GetAllPaginatedAsync(PaginationRequest request)
     {
+        if (request.Page < 1 || request.Size < 1)
+            throw new ValidationException("Page and size must be greater than zero.");
+
        
         int totalCount = await _readRepository.GetCountAsync();
 

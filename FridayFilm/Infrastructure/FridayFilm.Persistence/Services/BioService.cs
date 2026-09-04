@@ -1,6 +1,7 @@
 ﻿using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.BioDtos;
+using FridayFilm.Application.Exceptions;
 using FridayFilm.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -43,11 +44,11 @@ namespace FridayFilm.Application.Services
             });
         }
 
-        public async Task<BioResponse?> GetByIdAsync(Guid id)
+        public async Task<BioResponse> GetByIdAsync(Guid id)
         {
-            var bio = await _readRepository.GetByIdAsync(id);
-
-            if (bio == null) return null;
+            var bio = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Bio with ID '{id}' was not found.");
 
             return new BioResponse
             {
@@ -87,40 +88,77 @@ namespace FridayFilm.Application.Services
             await _writeRepository.SaveChangeAsync();
         }
 
-        public async Task<bool> UpdateAsync(Guid id, UpdateBioRequest request)
+        public async Task UpdateAsync(Guid id, UpdateBioRequest request)
         {
-            var bio = await _readRepository.GetByIdAsync(id);
-            if (bio == null) return false;
+            var bio = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Bio with ID '{id}' was not found.");
 
-            bio.Description = request.Description;
-            bio.ContactPhone = request.ContactPhone;
-            bio.ContactEmail = request.ContactEmail;
-            bio.InstagramUrl = request.InstagramUrl;
-            bio.FacebookUrl = request.FacebookUrl;
-            bio.TwitterUrl = request.TwitterUrl;
-        
+            // Boş gəlməyibsə köhnəni əzib yenisini yazırıq
+            if (!string.IsNullOrWhiteSpace(request.Description))
+            {
+                bio.Description = request.Description;
+            }
 
+            if (!string.IsNullOrWhiteSpace(request.ContactPhone))
+            {
+                bio.ContactPhone = request.ContactPhone;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.ContactEmail))
+            {
+                bio.ContactEmail = request.ContactEmail;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.InstagramUrl))
+            {
+                bio.InstagramUrl = request.InstagramUrl;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.FacebookUrl))
+            {
+                bio.FacebookUrl = request.FacebookUrl;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.TwitterUrl))
+            {
+                bio.TwitterUrl = request.TwitterUrl;
+            }
+
+            // Şəkil (Loqo) yenilənməsi prosesi
             if (request.LogoPhoto != null)
             {
+                if (bio.Logo != null && !string.IsNullOrEmpty(bio.Logo.PhotoUrl))
+                {
+                    _fileService.Delete(bio.Logo.PhotoUrl);
+                }
+
                 string photoUrl = await _fileService.UploadAsync("images/logos", request.LogoPhoto);
-                bio.Logo = new FilmImage { PhotoUrl = photoUrl };
+
+                if (bio.Logo != null)
+                {
+                    bio.Logo.PhotoUrl = photoUrl;
+                }
+                else
+                {
+                    bio.Logo = new FilmImage { PhotoUrl = photoUrl };
+                }
             }
 
             _writeRepository.Update(bio);
             await _writeRepository.SaveChangeAsync();
 
-            return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            var bio = await _readRepository.GetByIdAsync(id);
-            if (bio == null) return false;
+            var bio = await _readRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException(
+                    $"Bio with ID '{id}' was not found.");
 
             _writeRepository.Delete(bio);
             await _writeRepository.SaveChangeAsync();
 
-            return true;
         }
     }
 }

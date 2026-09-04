@@ -8,10 +8,10 @@ namespace FridayFilm.Application.Abstracts.Services;
 public interface IActorService
 {
     Task<PaginatedResponse<ActorResponse>> GetAllPaginatedAsync(PaginationRequest request); 
-    Task<ActorResponse?> GetByIdAsync(Guid id);
+    Task<ActorResponse> GetByIdAsync(Guid id);
     Task CreateAsync(CreateActorRequest request);
-    Task<bool> UpdateAsync(Guid id, UpdateActorRequest request);
+    Task UpdateAsync(Guid id, UpdateActorRequest request);
     Task<IEnumerable<ActorResponse>> SearchByNameAsync(string name);
 
-    Task<bool> DeleteAsync(Guid id);
+    Task DeleteAsync(Guid id);
 }
