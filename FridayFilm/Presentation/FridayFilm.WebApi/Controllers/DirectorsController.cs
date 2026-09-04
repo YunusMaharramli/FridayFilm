@@ -29,10 +29,6 @@ namespace FridayFilm.WebApi.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var response = await _directorService.GetByIdAsync(id);
-
-            if (response == null)
-                return NotFound("Rejissor tapılmadı.");
-
             return Ok(response);
         }
 
@@ -41,10 +37,6 @@ namespace FridayFilm.WebApi.Controllers
         public async Task<IActionResult> GetBySlug(string slug)
         {
             var response = await _directorService.GetBySlugAsync(slug);
-
-            if (response == null)
-                return NotFound("Rejissor tapılmadı.");
-
             return Ok(response);
         }
 
@@ -52,9 +44,6 @@ namespace FridayFilm.WebApi.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return BadRequest("Axtarış mətni boş ola bilməz.");
-
             var response = await _directorService.SearchByNameAsync(name);
             return Ok(response);
         }
@@ -64,29 +53,23 @@ namespace FridayFilm.WebApi.Controllers
         public async Task<IActionResult> Post([FromForm] CreateDirectorRequest request)
         {
             await _directorService.CreateAsync(request);
-            return StatusCode(201, "Rejissor uğurla yaradıldı.");
+            return StatusCode(201, "Director was created successfully.");
         }
 
         // PUT api/Directors/{id}
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Put(Guid id, [FromForm] UpdateDirectorRequest request)
         {
-            var isUpdated = await _directorService.UpdateAsync(id, request);
-            if (!isUpdated) return NotFound("Rejissor tapılmadı.");
-
-            return Ok("Rejissor uğurla yeniləndi.");
+            await _directorService.UpdateAsync(id, request);
+            return Ok("Director was updated successfully.");
         }
 
         // DELETE api/Directors/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var isDeleted = await _directorService.DeleteAsync(id);
-
-            if (!isDeleted)
-                return NotFound("Rejissor tapılmadı.");
-
-            return Ok("Rejissor uğurla silindi.");
+            await _directorService.DeleteAsync(id);
+            return Ok("Director was deleted successfully.");
         }
     }
 }
