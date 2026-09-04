@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contexts\" />
-    <Folder Include="Configurations\" />
-    <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\..\Core\FridayFilm.Application\FridayFilm.Application.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.29.3" />
   </ItemGroup>
 
 </Project>
