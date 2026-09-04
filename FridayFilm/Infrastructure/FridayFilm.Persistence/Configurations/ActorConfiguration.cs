@@ -29,8 +29,9 @@ public class ActorConfiguration : IEntityTypeConfiguration<Actor>
         builder.Property(a => a.Gender)
            .HasDefaultValue(Gender.Other);
 
+        // DÜZƏLDİLMİŞ ƏLAQƏ HİSSƏSİ
         builder.HasOne(a => a.Image)
-               .WithOne()
+               .WithOne(i => i.Actor)
                .HasForeignKey<Actor>(a => a.ImageId)
                .OnDelete(DeleteBehavior.SetNull);
 
@@ -41,7 +42,7 @@ public class ActorConfiguration : IEntityTypeConfiguration<Actor>
             {
                 Id = Guid.Parse("11111111-2222-3333-4444-555555555501"),
                 FullName = "Leonardo DiCaprio",
-                Slug = "leonardo-dicaprio", // <-- Slug əlavə edildi
+                Slug = "leonardo-dicaprio",
                 Nationality = "American",
                 Gender = Gender.Male,
                 Nickname = "Leo",

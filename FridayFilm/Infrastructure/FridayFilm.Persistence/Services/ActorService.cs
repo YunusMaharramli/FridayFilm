@@ -39,7 +39,6 @@ public class ActorService : IActorService
             Nickname = a.Nickname,
             Bio = a.Bio,
             ImageId = a.ImageId,
-
         });
     }
 
@@ -59,11 +58,8 @@ public class ActorService : IActorService
             Nickname = actor.Nickname,
             Bio = actor.Bio,
             ImageId = actor.ImageId,
-
         };
     }
-
-
 
     public async Task<IEnumerable<ActorResponse>> SearchByNameAsync(string name)
     {
@@ -83,7 +79,6 @@ public class ActorService : IActorService
             Nickname = a.Nickname,
             Bio = a.Bio,
             ImageId = a.ImageId,
-
         });
     }
 
@@ -106,7 +101,6 @@ public class ActorService : IActorService
             Nickname = a.Nickname,
             Bio = a.Bio,
             ImageId = a.ImageId,
-
         }).ToList();
 
         return new PaginatedResponse<ActorResponse>(mappedData, totalCount, request.Page, request.Size);
@@ -146,20 +140,52 @@ public class ActorService : IActorService
             ?? throw new NotFoundException(
                 $"Actor with ID '{id}' was not found.");
 
-        if (string.IsNullOrWhiteSpace(request.FullName))
-            throw new ValidationException("Actor full name cannot be empty.");
+        // 1. Slug və Adın yoxlanılması (Yalnız ad dəyişibsə yenilənir)
+        if (!string.IsNullOrWhiteSpace(request.FullName) && actor.FullName != request.FullName)
+        {
+            actor.FullName = request.FullName;
+            actor.Slug = request.FullName.ToSlug();
+        }
 
-        actor.FullName = request.FullName;
-        actor.Nationality = request.Nationality;
-        actor.Gender = request.Gender;
-        actor.Nickname = request.Nickname;
-        actor.Bio = request.Bio;
-        actor.Slug = request.FullName.ToSlug();
+        // 2. Boş (null və ya empty) gəlməyibsə köhnəni əzib yenisini yazırıq
+        if (!string.IsNullOrWhiteSpace(request.Nationality))
+        {
+            actor.Nationality = request.Nationality;
+        }
 
+        if (request.Gender.HasValue) // Əgər enum DTO-da nullable (Gender?) formatındadırsa
+        {
+            actor.Gender = request.Gender.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Nickname))
+        {
+            actor.Nickname = request.Nickname;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Bio))
+        {
+            actor.Bio = request.Bio;
+        }
+
+        // 3. Şəkil yenilənməsi prosesi
         if (request.Photo != null)
         {
+            if (actor.Image != null && !string.IsNullOrEmpty(actor.Image.PhotoUrl))
+            {
+                 _fileService.Delete(actor.Image.PhotoUrl);
+            }
+
             string photoUrl = await _fileService.UploadAsync("images/actors", request.Photo);
-            actor.Image = new FilmImage { PhotoUrl = photoUrl };
+          
+            if (actor.Image != null)
+            {
+                actor.Image.PhotoUrl = photoUrl;
+            }
+            else
+            {
+                actor.Image = new FilmImage { PhotoUrl = photoUrl };
+            }
         }
 
         _writeRepository.Update(actor);
