@@ -3,6 +3,7 @@ using System;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
-    partial class FridayFilmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260903151550_FixActorImageRelation")]
+    partial class FixActorImageRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,6 +537,9 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("DirectorId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -549,6 +555,8 @@ namespace FridayFilm.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DirectorId");
 
                     b.HasIndex("MovieId");
 
@@ -718,7 +726,7 @@ namespace FridayFilm.Infrastructure.Migrations
             modelBuilder.Entity("Director", b =>
                 {
                     b.HasOne("FridayFilm.Domain.Entities.FilmImage", "Image")
-                        .WithOne("Director")
+                        .WithOne()
                         .HasForeignKey("Director", "ImageId")
                         .OnDelete(DeleteBehavior.SetNull);
 
@@ -762,9 +770,15 @@ namespace FridayFilm.Infrastructure.Migrations
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.FilmImage", b =>
                 {
+                    b.HasOne("Director", "Director")
+                        .WithMany()
+                        .HasForeignKey("DirectorId");
+
                     b.HasOne("FridayFilm.Domain.Entities.Movie", "Movie")
                         .WithMany("Images")
                         .HasForeignKey("MovieId");
+
+                    b.Navigation("Director");
 
                     b.Navigation("Movie");
                 });
@@ -824,8 +838,6 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Navigation("Actor");
 
                     b.Navigation("Bio");
-
-                    b.Navigation("Director");
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.Language", b =>

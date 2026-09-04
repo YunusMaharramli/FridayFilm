@@ -92,18 +92,55 @@ namespace FridayFilm.Application.Services
             var bio = await _readRepository.GetByIdAsync(id);
             if (bio == null) return false;
 
-            bio.Description = request.Description;
-            bio.ContactPhone = request.ContactPhone;
-            bio.ContactEmail = request.ContactEmail;
-            bio.InstagramUrl = request.InstagramUrl;
-            bio.FacebookUrl = request.FacebookUrl;
-            bio.TwitterUrl = request.TwitterUrl;
-        
+            // Boş gəlməyibsə köhnəni əzib yenisini yazırıq
+            if (!string.IsNullOrWhiteSpace(request.Description))
+            {
+                bio.Description = request.Description;
+            }
 
+            if (!string.IsNullOrWhiteSpace(request.ContactPhone))
+            {
+                bio.ContactPhone = request.ContactPhone;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.ContactEmail))
+            {
+                bio.ContactEmail = request.ContactEmail;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.InstagramUrl))
+            {
+                bio.InstagramUrl = request.InstagramUrl;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.FacebookUrl))
+            {
+                bio.FacebookUrl = request.FacebookUrl;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.TwitterUrl))
+            {
+                bio.TwitterUrl = request.TwitterUrl;
+            }
+
+            // Şəkil (Loqo) yenilənməsi prosesi
             if (request.LogoPhoto != null)
             {
+                if (bio.Logo != null && !string.IsNullOrEmpty(bio.Logo.PhotoUrl))
+                {
+                    _fileService.Delete(bio.Logo.PhotoUrl);
+                }
+
                 string photoUrl = await _fileService.UploadAsync("images/logos", request.LogoPhoto);
-                bio.Logo = new FilmImage { PhotoUrl = photoUrl };
+
+                if (bio.Logo != null)
+                {
+                    bio.Logo.PhotoUrl = photoUrl;
+                }
+                else
+                {
+                    bio.Logo = new FilmImage { PhotoUrl = photoUrl };
+                }
             }
 
             _writeRepository.Update(bio);

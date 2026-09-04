@@ -2,6 +2,7 @@
 using FridayFilm.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace FridayFilm.Persistence.Configurations;
 
@@ -9,13 +10,11 @@ public class DirectorConfiguration : IEntityTypeConfiguration<Director>
 {
     public void Configure(EntityTypeBuilder<Director> builder)
     {
-
-
         builder.Property(d => d.FullName)
             .IsRequired()
             .HasMaxLength(150);
 
-        builder.HasIndex(d=>d.Slug).IsUnique();
+        builder.HasIndex(d => d.Slug).IsUnique();
 
         builder.Property(d => d.Nationality)
             .IsRequired()
@@ -23,11 +22,15 @@ public class DirectorConfiguration : IEntityTypeConfiguration<Director>
 
         builder.Property(d => d.Bio)
             .HasMaxLength(2000);
+
+        // DÜZƏLDİLMİŞ ƏLAQƏ HİSSƏSİ
         builder.HasOne(d => d.Image)
-               .WithOne()
+               .WithOne(i => i.Director) // <--- Əlaqə bərpa olundu
                .HasForeignKey<Director>(d => d.ImageId)
                .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasQueryFilter(x => !x.IsDeleted);
+
         builder.HasData(
             new Director
             {

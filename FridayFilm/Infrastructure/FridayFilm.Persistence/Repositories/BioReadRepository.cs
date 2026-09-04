@@ -10,4 +10,5 @@ public class BioReadRepository : ReadRepository<Bio>, IBioReadRepository
     public BioReadRepository(FridayFilmDbContext context) : base(context) // DbContext adını özününkü ilə eyniləşdir
     {
     }
+  
 }

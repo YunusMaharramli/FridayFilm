@@ -3,8 +3,8 @@ using FridayFilm.Application.Dtos.CategoryDtos;
 using FridayFilm.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FridayFilm.WebApi.Controllers
-{
+namespace FridayFilm.WebApi.Controllers;
+
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -65,4 +65,3 @@ namespace FridayFilm.WebApi.Controllers
             return result ? Ok("Kateqoriya uğurla silindi.") : NotFound("Kateqoriya tapılmadı.");
         }
     }
-}
