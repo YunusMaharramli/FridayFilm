@@ -1,6 +1,7 @@
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.ActorsDtos;
 using FridayFilm.Application.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridayFilm.WebApi.Controllers;
@@ -16,6 +17,7 @@ public class ActorsController : ControllerBase
         _actorService = actorService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
     {
@@ -23,6 +25,7 @@ public class ActorsController : ControllerBase
         return Ok(response);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -30,6 +33,7 @@ public class ActorsController : ControllerBase
         return Ok(response);
     }
 
+    [AllowAnonymous]
     [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string name)
     {
@@ -37,6 +41,7 @@ public class ActorsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] CreateActorRequest request)
     {
@@ -44,6 +49,7 @@ public class ActorsController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, "Aktyor uğurla yaradıldı.");
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id, [FromForm] UpdateActorRequest request)
     {
@@ -51,6 +57,7 @@ public class ActorsController : ControllerBase
         return Ok("Aktyor uğurla yeniləndi.");
     }
 
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

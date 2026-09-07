@@ -2,8 +2,11 @@
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.Services;
 using FridayFilm.Infrastructure.Repositories;
+using FridayFilm.Persistence.Contexts;
 using FridayFilm.Persistence.Repositories;
 using FridayFilm.Persistence.Services;
+using FridayFilm.Persistence.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FridayFilm.Persistence;
@@ -12,6 +15,27 @@ public static class ServiceCollectionExtentions
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
+        // Identity
+        services
+            .AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan =
+                    TimeSpan.FromMinutes(15);
+            })
+            .AddEntityFrameworkStores<FridayFilmDbContext>()
+            .AddSignInManager();
+
+        services.AddScoped<IAuthenticationService,AuthenticationService>();
         // Category
         services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
         services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();

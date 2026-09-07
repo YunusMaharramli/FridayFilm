@@ -1,5 +1,6 @@
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.DTOs.BioDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridayFilm.WebApi.Controllers;
@@ -15,6 +16,7 @@ public class BiosController : ControllerBase
         _bioService = bioService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -22,6 +24,7 @@ public class BiosController : ControllerBase
         return Ok(bios);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -29,6 +32,7 @@ public class BiosController : ControllerBase
         return Ok(bio);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreateBioRequest request)
     {
@@ -36,6 +40,7 @@ public class BiosController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, "Sayt məlumatı uğurla yaradıldı.");
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromForm] UpdateBioRequest request)
     {
@@ -43,6 +48,7 @@ public class BiosController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

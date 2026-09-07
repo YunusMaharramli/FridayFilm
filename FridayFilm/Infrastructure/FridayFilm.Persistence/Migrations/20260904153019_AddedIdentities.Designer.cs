@@ -3,6 +3,7 @@ using System;
 using FridayFilm.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
-    partial class FridayFilmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260904153019_AddedIdentities")]
+    partial class AddedIdentities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -408,120 +411,120 @@ namespace FridayFilm.Infrastructure.Migrations
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Action",
-                            Slug = "action"
+                            Name = "Aksiya",
+                            Slug = "aksiya"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Comedy",
-                            Slug = "comedy"
+                            Name = "Komediya",
+                            Slug = "komediya"
                         },
                         new
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Drama",
-                            Slug = "drama"
+                            Name = "Dram",
+                            Slug = "dram"
                         },
                         new
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Horror",
-                            Slug = "horror"
+                            Name = "Qorxu",
+                            Slug = "qorxu"
                         },
                         new
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Science Fiction",
-                            Slug = "science-fiction"
+                            Name = "Elmi Fantastika",
+                            Slug = "elmi-fantastika"
                         },
                         new
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Romance",
-                            Slug = "romance"
+                            Name = "Romantika",
+                            Slug = "romantika"
                         },
                         new
                         {
                             Id = new Guid("77777777-7777-7777-7777-777777777777"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Thriller",
-                            Slug = "thriller"
+                            Name = "Triller",
+                            Slug = "triller"
                         },
                         new
                         {
                             Id = new Guid("88888888-8888-8888-8888-888888888888"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Documentary",
-                            Slug = "documentary"
+                            Name = "Sənədli",
+                            Slug = "senedli"
                         },
                         new
                         {
                             Id = new Guid("99999999-9999-9999-9999-999999999999"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Fantasy",
-                            Slug = "fantasy"
+                            Name = "Fantastika",
+                            Slug = "fantastika"
                         },
                         new
                         {
                             Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Animation",
-                            Slug = "animation"
+                            Name = "Animasiya",
+                            Slug = "animasiya"
                         },
                         new
                         {
                             Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Mystery",
-                            Slug = "mystery"
+                            Name = "Müəmma",
+                            Slug = "muemma"
                         },
                         new
                         {
                             Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Adventure",
-                            Slug = "adventure"
+                            Name = "Macəra",
+                            Slug = "macera"
                         },
                         new
                         {
                             Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Crime",
-                            Slug = "crime"
+                            Name = "Cinayət",
+                            Slug = "cinayet"
                         },
                         new
                         {
                             Id = new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Family",
-                            Slug = "family"
+                            Name = "Ailə",
+                            Slug = "aile"
                         },
                         new
                         {
                             Id = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Historical",
-                            Slug = "historical"
+                            Name = "Tarixi",
+                            Slug = "tarixi"
                         });
                 });
 
@@ -751,46 +754,6 @@ namespace FridayFilm.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("FridayFilm.Persistence.Users.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ExpiresAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("RevokedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("TokenHash")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TokenHash")
-                        .IsUnique();
-
-                    b.HasIndex("UserId", "ExpiresAtUtc");
-
-                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("GenreMovie", b =>
@@ -1039,17 +1002,6 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("FridayFilm.Persistence.Users.RefreshToken", b =>
-                {
-                    b.HasOne("FridayFilm.Persistence.Users.ApplicationUser", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("GenreMovie", b =>
                 {
                     b.HasOne("FridayFilm.Domain.Entities.Genre", null)
@@ -1140,11 +1092,6 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("MovieDetail");
-                });
-
-            modelBuilder.Entity("FridayFilm.Persistence.Users.ApplicationUser", b =>
-                {
-                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

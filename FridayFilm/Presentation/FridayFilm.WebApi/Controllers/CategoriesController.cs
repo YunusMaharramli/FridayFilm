@@ -1,6 +1,7 @@
 using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.Dtos.CategoryDtos;
 using FridayFilm.Application.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridayFilm.WebApi.Controllers;
@@ -16,6 +17,7 @@ public class CategoriesController : ControllerBase
         _categoryService = categoryService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
     {
@@ -23,6 +25,7 @@ public class CategoriesController : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -30,6 +33,7 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
+    [AllowAnonymous]
     [HttpGet("slug/{slug}")]
     public async Task<IActionResult> GetBySlug(string slug)
     {
@@ -37,6 +41,7 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
+    [AllowAnonymous]
     [HttpGet("search")]
     public async Task<IActionResult> SearchByName([FromQuery] string name)
     {
@@ -44,6 +49,7 @@ public class CategoriesController : ControllerBase
         return Ok(categories);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
     {
@@ -51,6 +57,7 @@ public class CategoriesController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, "Kateqoriya uğurla yaradıldı.");
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request)
     {
@@ -58,6 +65,7 @@ public class CategoriesController : ControllerBase
         return Ok("Kateqoriya uğurla yeniləndi.");
     }
 
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
