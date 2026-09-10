@@ -1,4 +1,5 @@
 using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.DTOs.ActorsDtos;
 using FridayFilm.Application.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +42,7 @@ public class ActorsController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.Actors.Create)]
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] CreateActorRequest request)
     {
@@ -49,7 +50,7 @@ public class ActorsController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, "Aktyor uğurla yaradıldı.");
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.Actors.Update)]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id, [FromForm] UpdateActorRequest request)
     {
@@ -57,7 +58,7 @@ public class ActorsController : ControllerBase
         return Ok("Aktyor uğurla yeniləndi.");
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.Actors.Delete)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

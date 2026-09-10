@@ -1,4 +1,5 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Dtos.AuthDtos;
 using FridayFilm.Application.Exceptions;
 using FridayFilm.Persistence.Contexts;
@@ -14,15 +15,18 @@ public sealed class AuthenticationService : IAuthenticationService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ITokenService _tokenService;
     private readonly FridayFilmDbContext _dbContext;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
     public AuthenticationService(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
-        ITokenService tokenService,
-        FridayFilmDbContext dbContext)
+    UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager,
+    RoleManager<IdentityRole> roleManager,
+    ITokenService tokenService,
+    FridayFilmDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _roleManager = roleManager;
         _tokenService = tokenService;
         _dbContext = dbContext;
     }
@@ -55,6 +59,7 @@ public sealed class AuthenticationService : IAuthenticationService
             user,
             request.Password);
 
+
         if (!createResult.Succeeded)
         {
             var errors = string.Join(
@@ -63,6 +68,7 @@ public sealed class AuthenticationService : IAuthenticationService
 
             throw new ValidationException(errors);
         }
+        await _userManager.AddToRoleAsync(user, "Admin");
 
         return await CreateAuthResponseAsync(
             user,
@@ -112,12 +118,41 @@ public sealed class AuthenticationService : IAuthenticationService
     ApplicationUser user,
     CancellationToken cancellationToken)
     {
-        var accessToken = _tokenService.CreateAccessToken(
-            new TokenUser(
-                user.Id,
-                user.Email!,
-                user.Fullname,
-                Array.Empty<string>()));
+        var roles =
+        await _userManager.GetRolesAsync(user);
+
+        var permissions = new HashSet<string>(
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var roleName in roles)
+        {
+            var role =
+                await _roleManager.FindByNameAsync(roleName);
+
+            if (role is null)
+            {
+                continue;
+            }
+
+            var claims =
+                await _roleManager.GetClaimsAsync(role);
+
+            foreach (var claim in claims.Where(x =>
+                         x.Type ==
+                         CustomClaimTypes.Permission))
+            {
+                permissions.Add(claim.Value);
+            }
+        }
+
+        var accessToken =
+            _tokenService.CreateAccessToken(
+                new TokenUser(
+                    user.Id,
+                    user.Email!,
+                    user.Fullname,
+                    roles.ToArray(),
+                    permissions.ToArray()));
 
         var refreshToken = _tokenService.CreateRefreshToken();
 

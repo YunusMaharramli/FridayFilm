@@ -4,4 +4,5 @@ public sealed record TokenUser(
     string Id,
     string Email,
     string Name,
-    IReadOnlyCollection<string> Roles);
+    IReadOnlyCollection<string> Roles,
+    IReadOnlyCollection<string> Permissions);

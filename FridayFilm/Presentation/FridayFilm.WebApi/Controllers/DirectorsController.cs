@@ -1,4 +1,5 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.DTOs.DirectorsDtos;
 using FridayFilm.Application.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -53,7 +54,7 @@ namespace FridayFilm.WebApi.Controllers
         }
 
         // POST api/Directors
-        [Authorize]
+        [Authorize(Policy = Permissions.Directors.Create)]
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] CreateDirectorRequest request)
         {
@@ -62,7 +63,7 @@ namespace FridayFilm.WebApi.Controllers
         }
 
         // PUT api/Directors/{id}
-        [Authorize]
+        [Authorize(Policy = Permissions.Directors.Update)]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Put(Guid id, [FromForm] UpdateDirectorRequest request)
         {
@@ -71,7 +72,7 @@ namespace FridayFilm.WebApi.Controllers
         }
 
         // DELETE api/Directors/{id}
-        [Authorize]
+        [Authorize(Policy = Permissions.Directors.Delete)]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
