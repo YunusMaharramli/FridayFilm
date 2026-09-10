@@ -1,4 +1,5 @@
 using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Dtos.CategoryDtos;
 using FridayFilm.Application.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -49,7 +50,7 @@ public class CategoriesController : ControllerBase
         return Ok(categories);
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.Categories.Create)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
     {
@@ -57,7 +58,7 @@ public class CategoriesController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, "Kateqoriya uğurla yaradıldı.");
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.Categories.Update)]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request)
     {
@@ -65,7 +66,7 @@ public class CategoriesController : ControllerBase
         return Ok("Kateqoriya uğurla yeniləndi.");
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.Categories.Delete)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

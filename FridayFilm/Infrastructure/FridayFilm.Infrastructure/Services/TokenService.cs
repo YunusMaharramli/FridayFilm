@@ -1,4 +1,5 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Dtos.AuthDtos;
 using FridayFilm.Application.Settings;
 using Microsoft.Extensions.Options;
@@ -39,6 +40,11 @@ public class TokenService : ITokenService
 
         claims.AddRange(
             user.Roles.Select(role => new Claim("role", role)));
+        claims.AddRange(
+            user.Permissions.Select(permission =>
+                new Claim(
+                    CustomClaimTypes.Permission,
+                    permission)));
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_options.SecretKey));

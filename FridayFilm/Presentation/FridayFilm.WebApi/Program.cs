@@ -1,19 +1,21 @@
 using FluentValidation.AspNetCore; // YENİ: AutoValidation üçün mütləqdir
 using FridayFilm.Application;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Settings;
+using FridayFilm.Infrastructure.Services;
 using FridayFilm.Persistence;
 using FridayFilm.Persistence.Contexts;
-using FridayFilm.WebApi.Filters;
-using Microsoft.AspNetCore.Mvc;
+using FridayFilm.Persistence.Seed;
 using FridayFilm.WebApi.ExceptionHandlers;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
+using FridayFilm.WebApi.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
-using FridayFilm.Infrastructure.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,27 +59,21 @@ builder.Services
     .Bind(builder.Configuration.GetRequiredSection(
         JwtOptions.SectionName))
     .Validate(
-        options => !string.IsNullOrWhiteSpace(options.Issuer),
-        "Requires JWT Issuer .")
+        options => !string.IsNullOrWhiteSpace(options.Issuer))
     .Validate(
-        options => !string.IsNullOrWhiteSpace(options.Audience),
-        "Requires JWT Audience .")
+        options => !string.IsNullOrWhiteSpace(options.Audience))
     .Validate(
-        options => options.RefreshTokenExpirationDays > 0,
-        "JWT RefreshTokenExpirationDays must be greater than zero.")
+        options => options.RefreshTokenExpirationDays > 0)
     .Validate(
         options => !string.IsNullOrWhiteSpace(options.SecretKey)
-                   && options.SecretKey.Length >= 32,
-        "JWT SecretKey minimum 32 characters required.")
+                   && options.SecretKey.Length >= 32)
     .Validate(
-        options => options.AccessTokenExpirationMinutes > 0,
-        "JWT AccessTokenExpirationMinutes must be greater than zero.")
+        options => options.AccessTokenExpirationMinutes > 0)
     .ValidateOnStart();
 var jwtOptions = builder.Configuration
     .GetRequiredSection(JwtOptions.SectionName)
     .Get<JwtOptions>()
-    ?? throw new InvalidOperationException(
-        "JWT configuration was not found.");
+    ?? throw new InvalidOperationException();
 
 builder.Services
     .AddAuthentication(options =>
@@ -114,10 +110,22 @@ builder.Services
             };
     });
 
-builder.Services.AddAuthorizationBuilder()
-    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build());
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy =
+        new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .Build();
+
+    foreach (var permission in Permissions.All)
+    {
+        options.AddPolicy(
+            permission,
+            policy => policy.RequireClaim(
+                CustomClaimTypes.Permission,
+                permission));
+    }
+});
 
 builder.Services.AddInfrastructure();
 builder.Services.AddPersistence();
@@ -149,6 +157,9 @@ builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 });
 
 var app = builder.Build();
+
+await AdminRoleSeeder.SeedAsync(app.Services);
+
 app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())

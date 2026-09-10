@@ -32,10 +32,12 @@ public static class ServiceCollectionExtentions
                 options.Lockout.DefaultLockoutTimeSpan =
                     TimeSpan.FromMinutes(15);
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<FridayFilmDbContext>()
             .AddSignInManager();
 
         services.AddScoped<IAuthenticationService,AuthenticationService>();
+        services.AddScoped<IRoleService, RoleService>();
         // Category
         services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
         services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();

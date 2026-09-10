@@ -1,4 +1,5 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Dtos.GenreDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace FridayFilm.WebApi.Controllers;
             return Ok(genre);
         }
 
-        [Authorize]
+        [Authorize(Policy = Permissions.Genres.Create)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateGenreRequest request)
         {
@@ -43,7 +44,7 @@ namespace FridayFilm.WebApi.Controllers;
             return StatusCode(201, "Janr uğurla yaradıldı.");
         }
 
-        [Authorize]
+        [Authorize(Policy = Permissions.Genres.Update)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateGenreRequest request)
         {
@@ -53,7 +54,7 @@ namespace FridayFilm.WebApi.Controllers;
             return Ok("Janr uğurla yeniləndi.");
         }
 
-        [Authorize]
+        [Authorize(Policy = Permissions.Genres.Delete)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

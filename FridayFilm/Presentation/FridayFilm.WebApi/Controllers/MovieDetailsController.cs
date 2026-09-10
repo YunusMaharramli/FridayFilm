@@ -1,4 +1,5 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Dtos.MovieDetailDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ public class MovieDetailsController : ControllerBase
         return Ok(detail);
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.MovieDetails.Create)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateMovieDetailRequest request)
     {
@@ -44,7 +45,7 @@ public class MovieDetailsController : ControllerBase
         return StatusCode(201, "Film detalı uğurla yaradıldı.");
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.MovieDetails.Update)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMovieDetailRequest request)
     {
@@ -54,7 +55,7 @@ public class MovieDetailsController : ControllerBase
         return Ok("Film detalı uğurla yeniləndi.");
     }
 
-    [Authorize]
+    [Authorize(Policy = Permissions.MovieDetails.Delete)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
