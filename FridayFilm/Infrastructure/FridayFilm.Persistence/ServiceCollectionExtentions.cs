@@ -38,6 +38,7 @@ public static class ServiceCollectionExtentions
 
         services.AddScoped<IAuthenticationService,AuthenticationService>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IMovieService, MovieService>();
         // Category
         services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
         services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();

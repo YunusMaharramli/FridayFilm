@@ -1,6 +1,13 @@
 ﻿namespace FridayFilm.Application.Authorization;
 public static class Permissions
 {
+    public static class Movies
+    {
+        public const string Create = "movies.create";
+        public const string Update = "movies.update";
+        public const string Delete = "movies.delete";
+    }
+
     public static class Roles
     {
         public const string Read = "roles.read";
@@ -63,6 +70,9 @@ public static class Permissions
 
     public static readonly IReadOnlyCollection<string> All =
     [
+        Movies.Create,
+        Movies.Update,
+        Movies.Delete,
         Roles.Read,
         Roles.Create,
         Roles.Update,
