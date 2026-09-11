@@ -1,4 +1,5 @@
-﻿using FridayFilm.Application.Abstracts.Services;
+﻿using FridayFilm.Application.Abstracts.Notifications;
+using FridayFilm.Application.Abstracts.Services;
 using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Dtos.AuthDtos;
 using FridayFilm.Application.Exceptions;
@@ -13,21 +14,24 @@ public sealed class AuthenticationService : IAuthenticationService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IEmailService _emailService;
     private readonly ITokenService _tokenService;
     private readonly FridayFilmDbContext _dbContext;
     private readonly RoleManager<IdentityRole> _roleManager;
 
     public AuthenticationService(
-    UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager,
-    RoleManager<IdentityRole> roleManager,
-    ITokenService tokenService,
-    FridayFilmDbContext dbContext)
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        RoleManager<IdentityRole> roleManager,
+        ITokenService tokenService,
+        IEmailService emailService,
+        FridayFilmDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _tokenService = tokenService;
+        _emailService = emailService;
         _dbContext = dbContext;
     }
 
@@ -36,16 +40,12 @@ public sealed class AuthenticationService : IAuthenticationService
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
         var email = request.Email.Trim();
 
-        var existingUser =
-            await _userManager.FindByEmailAsync(email);
-
+        var existingUser = await _userManager.FindByEmailAsync(email);
         if (existingUser is not null)
         {
-            throw new ConflictException(
-                "This Email is already in use.");
+            throw new ConflictException("This Email is already in use.");
         }
 
         var user = new ApplicationUser
@@ -55,24 +55,21 @@ public sealed class AuthenticationService : IAuthenticationService
             UserName = email
         };
 
-        var createResult = await _userManager.CreateAsync(
-            user,
-            request.Password);
-
-
+        var createResult = await _userManager.CreateAsync(user, request.Password);
         if (!createResult.Succeeded)
         {
-            var errors = string.Join(
-                " ",
-                createResult.Errors.Select(x => x.Description));
-
+            var errors = string.Join(" ", createResult.Errors.Select(x => x.Description));
             throw new ValidationException(errors);
         }
+
         await _userManager.AddToRoleAsync(user, "Admin");
 
-        return await CreateAuthResponseAsync(
-            user,
-            cancellationToken);
+        // 1. E-poçt təsdiqləmə tokeni yaradılır və məktub göndərilir
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        await _emailService.SendVerificationEmailAsync(user.Email, user.Id, token);
+
+        // 2. Qeydiyyatdan dərhal sonra tokeni qaytarırıq (öz istəyinə uyğun saxlanıldı)
+        return await CreateAuthResponseAsync(user, cancellationToken);
     }
 
     public async Task<AuthResponse> LoginAsync(
@@ -80,79 +77,57 @@ public sealed class AuthenticationService : IAuthenticationService
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
         var email = request.Email.Trim();
 
         var user = await _userManager.FindByEmailAsync(email);
-
         if (user is null)
         {
-            throw new UnauthorizedException(
-                "Email or Password is incorrect.");
+            throw new UnauthorizedException("Email or Password is incorrect.");
         }
 
-        var signInResult =
-            await _signInManager.CheckPasswordSignInAsync(
-                user,
-                request.Password,
-                lockoutOnFailure: true);
+        // ==========================================
+        // YENİ: Əgər e-poçt təsdiqlənməyibsə, sistemə buraxmırıq!
+        // ==========================================
+        if (!user.EmailConfirmed)
+        {
+            throw new UnauthorizedException("Hesabınıza daxil olmaq üçün zəhmət olmasa e-poçtunuzu təsdiqləyin.");
+        }
 
+        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
         if (signInResult.IsLockedOut)
         {
-            throw new UnauthorizedException(
-                "The account is temporarily locked.");
+            throw new UnauthorizedException("The account is temporarily locked.");
         }
 
         if (!signInResult.Succeeded)
         {
-            throw new UnauthorizedException(
-                "Email or Password is incorrect.");
+            throw new UnauthorizedException("Email or Password is incorrect.");
         }
 
-        return await CreateAuthResponseAsync(
-            user,
-            cancellationToken);
+        return await CreateAuthResponseAsync(user, cancellationToken);
     }
 
     private async Task<AuthResponse> CreateAuthResponseAsync(
-    ApplicationUser user,
-    CancellationToken cancellationToken)
+        ApplicationUser user,
+        CancellationToken cancellationToken)
     {
-        var roles =
-        await _userManager.GetRolesAsync(user);
-
-        var permissions = new HashSet<string>(
-            StringComparer.OrdinalIgnoreCase);
+        var roles = await _userManager.GetRolesAsync(user);
+        var permissions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var roleName in roles)
         {
-            var role =
-                await _roleManager.FindByNameAsync(roleName);
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role is null) continue;
 
-            if (role is null)
-            {
-                continue;
-            }
-
-            var claims =
-                await _roleManager.GetClaimsAsync(role);
-
-            foreach (var claim in claims.Where(x =>
-                         x.Type ==
-                         CustomClaimTypes.Permission))
+            var claims = await _roleManager.GetClaimsAsync(role);
+            foreach (var claim in claims.Where(x => x.Type == CustomClaimTypes.Permission))
             {
                 permissions.Add(claim.Value);
             }
         }
 
-        var accessToken =
-            _tokenService.CreateAccessToken(
-                new TokenUser(
-                    user.Id,
-                    user.Email!,
-                    user.Fullname,
-                    roles.ToArray(),
-                    permissions.ToArray()));
+        var accessToken = _tokenService.CreateAccessToken(
+            new TokenUser(user.Id, user.Email!, user.Fullname, roles.ToArray(), permissions.ToArray()));
 
         var refreshToken = _tokenService.CreateRefreshToken();
 
@@ -173,60 +148,61 @@ public sealed class AuthenticationService : IAuthenticationService
             refreshToken.Token,
             refreshToken.ExpiresAtUtc);
     }
+
     public async Task<AuthResponse> RefreshAsync(
-    RefreshTokenRequest request,
-    CancellationToken cancellationToken = default)
+        RefreshTokenRequest request,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        var tokenHash = _tokenService.ComputeRefreshTokenHash(
-            request.RefreshToken);
+        var tokenHash = _tokenService.ComputeRefreshTokenHash(request.RefreshToken);
 
         var storedToken = await _dbContext.RefreshTokens
             .Include(x => x.User)
-            .SingleOrDefaultAsync(
-                x => x.TokenHash == tokenHash,
-                cancellationToken);
+            .SingleOrDefaultAsync(x => x.TokenHash == tokenHash, cancellationToken);
 
         var now = DateTime.UtcNow;
-
-        if (storedToken is null ||
-            storedToken.RevokedAtUtc is not null ||
-            storedToken.ExpiresAtUtc <= now)
+        if (storedToken is null || storedToken.RevokedAtUtc is not null || storedToken.ExpiresAtUtc <= now)
         {
-            throw new UnauthorizedException(
-                "Refresh token is invalid or expired.");
+            throw new UnauthorizedException("Refresh token is invalid or expired.");
         }
 
         storedToken.RevokedAtUtc = now;
-
-        return await CreateAuthResponseAsync(
-            storedToken.User,
-            cancellationToken);
+        return await CreateAuthResponseAsync(storedToken.User, cancellationToken);
     }
+
     public async Task LogoutAsync(
-    RefreshTokenRequest request,
-    CancellationToken cancellationToken = default)
+        RefreshTokenRequest request,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        var tokenHash = _tokenService.ComputeRefreshTokenHash(
-            request.RefreshToken);
+        var tokenHash = _tokenService.ComputeRefreshTokenHash(request.RefreshToken);
 
         var storedToken = await _dbContext.RefreshTokens
-            .SingleOrDefaultAsync(
-                x => x.TokenHash == tokenHash,
-                cancellationToken);
+            .SingleOrDefaultAsync(x => x.TokenHash == tokenHash, cancellationToken);
 
-        if (storedToken is null ||
-            storedToken.RevokedAtUtc is not null)
+        if (storedToken is null || storedToken.RevokedAtUtc is not null)
         {
             return;
         }
 
         storedToken.RevokedAtUtc = DateTime.UtcNow;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
 
-        await _dbContext.SaveChangesAsync(
-            cancellationToken);
+    public async Task VerifyEmailAsync(string userId, string token, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            throw new ValidationException("İstifadəçi tapılmadı.");
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+        {
+            throw new ValidationException("Təsdiqləmə linki səhvdir və ya vaxtı keçib.");
+        }
     }
 }

@@ -17,4 +17,5 @@ public interface IAuthenticationService
     Task<AuthResponse> RefreshAsync(
     RefreshTokenRequest request,
     CancellationToken cancellationToken = default);
+    Task VerifyEmailAsync(string userId, string token, CancellationToken cancellationToken = default);
 }
