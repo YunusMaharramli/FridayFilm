@@ -159,6 +159,7 @@ builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 var app = builder.Build();
 
 await AdminRoleSeeder.SeedAsync(app.Services);
+await UserRoleSeeder.SeedAsync(app.Services);
 
 app.UseMiddleware<GlobalExceptionHandler>();
 
