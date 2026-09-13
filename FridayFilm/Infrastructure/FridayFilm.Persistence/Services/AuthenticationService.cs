@@ -62,7 +62,7 @@ public sealed class AuthenticationService : IAuthenticationService
             throw new ValidationException(errors);
         }
 
-        await _userManager.AddToRoleAsync(user, "Admin");
+        await _userManager.AddToRoleAsync(user, AppRoles.Admin);
 
         // 1. E-poçt təsdiqləmə tokeni yaradılır və məktub göndərilir
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -205,4 +205,4 @@ public sealed class AuthenticationService : IAuthenticationService
             throw new ValidationException("Təsdiqləmə linki səhvdir və ya vaxtı keçib.");
         }
     }
-}
+} 
