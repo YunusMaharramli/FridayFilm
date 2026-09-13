@@ -19,7 +19,7 @@ public class MovieDetailsController : ControllerBase
         _movieDetailService = movieDetailService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.MovieDetails.Read)]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -27,7 +27,7 @@ public class MovieDetailsController : ControllerBase
         return Ok(details);
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.MovieDetails.Read)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {

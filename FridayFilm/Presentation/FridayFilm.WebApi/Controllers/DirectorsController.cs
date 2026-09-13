@@ -18,7 +18,7 @@ namespace FridayFilm.WebApi.Controllers
             _directorService = directorService;
         }
 
-        [AllowAnonymous]
+        [Authorize(Policy = Permissions.Directors.Read)]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
         {
@@ -27,7 +27,7 @@ namespace FridayFilm.WebApi.Controllers
         }
 
         // GET api/Directors/22222222-3333-4444-5555-6666666666014
-        [AllowAnonymous]
+        [Authorize(Policy = Permissions.Directors.Read)]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -36,7 +36,7 @@ namespace FridayFilm.WebApi.Controllers
         }
 
         // GET api/Directors/slug/christopher-nolan
-        [AllowAnonymous]
+        [Authorize(Policy = Permissions.Directors.Read)]
         [HttpGet("slug/{slug}")]
         public async Task<IActionResult> GetBySlug(string slug)
         {
@@ -45,7 +45,7 @@ namespace FridayFilm.WebApi.Controllers
         }
 
         // GET api/Directors/search?name=nolan
-        [AllowAnonymous]
+        [Authorize(Policy = Permissions.Directors.Read)]
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] string name)
         {

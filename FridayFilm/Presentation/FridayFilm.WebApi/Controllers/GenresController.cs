@@ -18,7 +18,7 @@ namespace FridayFilm.WebApi.Controllers;
             _genreService = genreService;
         }
 
-        [AllowAnonymous]
+        [Authorize(Policy = Permissions.Genres.Read)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -26,7 +26,7 @@ namespace FridayFilm.WebApi.Controllers;
             return Ok(genres);
         }
 
-        [AllowAnonymous]
+        [Authorize(Policy = Permissions.Genres.Read)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {

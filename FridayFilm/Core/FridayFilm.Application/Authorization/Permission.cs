@@ -3,6 +3,7 @@ public static class Permissions
 {
     public static class Movies
     {
+        public const string Read = "movies.read";
         public const string Create = "movies.create";
         public const string Update = "movies.update";
         public const string Delete = "movies.delete";
@@ -70,6 +71,7 @@ public static class Permissions
 
     public static readonly IReadOnlyCollection<string> All =
     [
+        Movies.Read,
         Movies.Create,
         Movies.Update,
         Movies.Delete,

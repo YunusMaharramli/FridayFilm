@@ -18,7 +18,7 @@ public class CategoriesController : ControllerBase
         _categoryService = categoryService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Categories.Read)]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
     {
@@ -26,7 +26,7 @@ public class CategoriesController : ControllerBase
         return Ok(result);
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Categories.Read)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -34,7 +34,7 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Categories.Read)]
     [HttpGet("slug/{slug}")]
     public async Task<IActionResult> GetBySlug(string slug)
     {
@@ -42,7 +42,7 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Categories.Read)]
     [HttpGet("search")]
     public async Task<IActionResult> SearchByName([FromQuery] string name)
     {

@@ -15,7 +15,8 @@ public static class UserRoleSeeder
         Permissions.Genres.Read,
         Permissions.Bios.Read,
         Permissions.MovieDetails.Read,
-        Permissions.Images.Read
+        Permissions.Images.Read,
+        Permissions.Movies.Read
     ];
 
     public static async Task SeedAsync(IServiceProvider serviceProvider)

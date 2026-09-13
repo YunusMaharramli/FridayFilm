@@ -18,7 +18,7 @@ public class ActorsController : ControllerBase
         _actorService = actorService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Actors.Read)]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
     {
@@ -26,7 +26,7 @@ public class ActorsController : ControllerBase
         return Ok(response);
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Actors.Read)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -34,7 +34,7 @@ public class ActorsController : ControllerBase
         return Ok(response);
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Actors.Read)]
     [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string name)
     {

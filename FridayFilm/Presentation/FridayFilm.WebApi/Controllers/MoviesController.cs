@@ -26,12 +26,12 @@ public sealed class MoviesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, new { Id = id });
     }
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Movies.Read)]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
         => Ok(await _movieService.GetAllAsync(request, cancellationToken));
 
-    [AllowAnonymous]
+    [Authorize(Policy = Permissions.Movies.Read)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await _movieService.GetByIdAsync(id, cancellationToken));
