@@ -4,9 +4,9 @@ namespace FridayFilm.Application.Abstracts.Services;
 
 public interface IAuthenticationService
 {
-    Task<AuthResponse> RegisterAsync(
-        RegisterRequest request,
-        CancellationToken cancellationToken = default);
+    Task<RegisterResponse> RegisterAsync(
+    RegisterRequest request,
+    CancellationToken cancellationToken = default);
 
     Task<AuthResponse> LoginAsync(
         LoginRequest request,
@@ -18,4 +18,5 @@ public interface IAuthenticationService
     RefreshTokenRequest request,
     CancellationToken cancellationToken = default);
     Task VerifyEmailAsync(string userId, string token, CancellationToken cancellationToken = default);
+    Task ResendVerificationAsync(string email, CancellationToken cancellationToken = default);
 }

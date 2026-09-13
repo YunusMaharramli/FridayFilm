@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101112">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="FridayFilm — növbəti sevimli filmini kəşf et.">
+  <title>FridayFilm — Yaxşı hekayələr burada başlayır</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Məzmuna keç</a>
+  <header class="header">
+    <a class="brand" href="#home" aria-label="FridayFilm ana səhifə"><span class="brand-icon">f.</span>friday<span>film</span><i></i></a>
+    <nav aria-label="Əsas menyu"><a href="#home" data-nav="home">Kəşf et</a><a href="#catalog" data-nav="catalog">Filmlər</a><a href="#people" data-nav="people">Kino insanları</a></nav>
+    <div id="account"></div>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer><a class="brand" href="#home">friday<span>film</span><i></i></a><p>Hər gün bir az kino.</p><span>© <span id="year"></span> FridayFilm</span></footer>
+  <dialog id="modal" aria-labelledby="modal-title"><button class="close icon-button" aria-label="Bağla">×</button><div id="modal-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

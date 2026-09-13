@@ -6,6 +6,6 @@ namespace FridayFilm.Application.Dtos.MovieDetailDtos;
 
 public class UpdateMovieDetailRequest
 {
-    public string Description { get; set; }
-    public string TrailerUrl { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string TrailerUrl { get; set; } = string.Empty;
 }

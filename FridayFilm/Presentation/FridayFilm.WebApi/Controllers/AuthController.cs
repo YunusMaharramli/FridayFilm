@@ -13,18 +13,16 @@ namespace FridayFilm.WebApi.Controllers;
 public sealed class AuthController : ControllerBase
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly UserManager<ApplicationUser> _userManager; // Yeni
 
     public AuthController(
-        IAuthenticationService authenticationService,
-        UserManager<ApplicationUser> userManager) // Yeni
+        IAuthenticationService authenticationService)
     {
         _authenticationService = authenticationService;
-        _userManager = userManager;
     }
 
     [AllowAnonymous]
     [HttpPost("register")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("auth")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterRequest request,
         CancellationToken cancellationToken)
@@ -34,8 +32,6 @@ public sealed class AuthController : ControllerBase
                 request,
                 cancellationToken);
 
-        // Qeyd: Əgər sən AuthService-də "return null" etmisənsə, 
-        // bura gələn response null olacaq. Bu normaldır.
         return StatusCode(
             StatusCodes.Status201Created,
             response);
@@ -43,6 +39,7 @@ public sealed class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("auth")]
     public async Task<IActionResult> Login(
         [FromBody] LoginRequest request,
         CancellationToken cancellationToken)
@@ -80,6 +77,15 @@ public sealed class AuthController : ControllerBase
                 cancellationToken);
 
         return Ok(response);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("resend-verification")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("auth")]
+    public async Task<IActionResult> Resend(ResendVerificationRequest request, CancellationToken cancellationToken)
+    {
+        await _authenticationService.ResendVerificationAsync(request.Email, cancellationToken);
+        return Ok(new { Message = "Təsdiqlənməmiş hesab varsa, məktub göndərildi." });
     }
 
     [Authorize]

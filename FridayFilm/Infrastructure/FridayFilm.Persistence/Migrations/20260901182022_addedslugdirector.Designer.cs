@@ -13,7 +13,7 @@ namespace FridayFilm.Infrastructure.Migrations
 {
     [DbContext(typeof(FridayFilmDbContext))]
     [Migration("20260901182022_addedslugdirector")]
-    partial class addedslugdirector
+    partial class AddedSlugDirector
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

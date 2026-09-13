@@ -13,7 +13,9 @@ public sealed class CreateMovieRequestValidator : AbstractValidator<CreateMovieR
             .Must(value => decimal.Round(value, 1) == value)
             .WithMessage("IMDB maksimum bir onluq rəqəm ola bilər.");
         RuleFor(x => x.Year).InclusiveBetween(1, 9999);
-        RuleFor(x => x.CoverImg).NotEmpty().MaximumLength(500);
+        RuleFor(x => x.CoverImg).NotEmpty().MaximumLength(500)
+            .Must(value => Uri.TryCreate(value, UriKind.Absolute, out var uri) && uri.Scheme is "https" or "http")
+            .WithMessage("Poster üçün düzgün HTTP və ya HTTPS URL daxil edin.");
         RuleFor(x => x.Duration).GreaterThan(TimeSpan.Zero);
         RuleFor(x => x.LanguageId).NotEmpty();
         RuleFor(x => x.CategoryId).NotEmpty();

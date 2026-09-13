@@ -22,7 +22,10 @@ namespace FridayFilm.WebApi.Filters
 
                 var errorResponse = new
                 {
+                    StatusCode = 400,
                     Message = "Göndərilən məlumatlarda xəta var.",
+                    Path = context.HttpContext.Request.Path.Value,
+                    TraceId = context.HttpContext.TraceIdentifier,
                     Errors = errorsInModelState
                 };
 
