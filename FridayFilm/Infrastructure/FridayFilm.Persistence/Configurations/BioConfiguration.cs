@@ -9,6 +9,7 @@ public class BioConfiguration : IEntityTypeConfiguration<Bio>
 {
     public void Configure(EntityTypeBuilder<Bio> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         // Əlaqə tam düzgündür
         builder.HasOne(b => b.Logo)
                .WithOne(f => f.Bio)

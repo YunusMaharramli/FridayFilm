@@ -70,15 +70,26 @@ public sealed class MovieService : IMovieService
         return movie.Id;
     }
 
-    public async Task<PaginatedResponse<MovieResponse>> GetAllAsync(PaginationRequest request, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<MovieResponse>> GetAllAsync(MovieQueryRequest request, CancellationToken cancellationToken = default)
     {
         var offset = ((long)request.Page - 1) * request.Size;
         if (request.Page < 1 || request.Size < 1 || offset > int.MaxValue)
             throw new Application.Exceptions.ValidationException("Page və size düzgün müsbət qiymətlər olmalıdır.");
 
-        var count = await _context.Movies.CountAsync(cancellationToken);
-        var movies = await MovieQuery().AsNoTracking()
-            .OrderByDescending(x => x.CreatedDate).ThenBy(x => x.Id)
+        var query = MovieQuery().AsNoTracking();
+        if (!string.IsNullOrWhiteSpace(request.Search))
+            query = query.Where(x => x.Name.ToLower().Contains(request.Search.Trim().ToLower()));
+        if (request.CategoryId.HasValue)
+            query = query.Where(x => x.CategoryId == request.CategoryId.Value);
+        var count = await query.CountAsync(cancellationToken);
+        var sorted = request.Sort switch
+        {
+            "rating" => query.OrderByDescending(x => x.IMDB),
+            "year" => query.OrderByDescending(x => x.Year),
+            "name" => query.OrderBy(x => x.Name),
+            _ => query.OrderByDescending(x => x.CreatedDate)
+        };
+        var movies = await sorted.ThenBy(x => x.Id)
             .Skip((int)offset).Take(request.Size).ToListAsync(cancellationToken);
         return new PaginatedResponse<MovieResponse>(movies.Select(Map), count, request.Page, request.Size);
     }

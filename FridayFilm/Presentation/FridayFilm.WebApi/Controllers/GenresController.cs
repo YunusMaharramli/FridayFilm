@@ -18,7 +18,7 @@ namespace FridayFilm.WebApi.Controllers;
             _genreService = genreService;
         }
 
-        [Authorize(Policy = Permissions.Genres.Read)]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -26,12 +26,12 @@ namespace FridayFilm.WebApi.Controllers;
             return Ok(genres);
         }
 
-        [Authorize(Policy = Permissions.Genres.Read)]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var genre = await _genreService.GetByIdAsync(id);
-            if (genre == null) return NotFound("Janr tapılmadı.");
+            if (genre == null) throw new FridayFilm.Application.Exceptions.NotFoundException("Janr tapılmadı.");
 
             return Ok(genre);
         }
@@ -49,7 +49,7 @@ namespace FridayFilm.WebApi.Controllers;
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateGenreRequest request)
         {
             var result = await _genreService.UpdateAsync(id, request);
-            if (!result) return NotFound("Yenilənmək üçün janr tapılmadı.");
+            if (!result) throw new FridayFilm.Application.Exceptions.NotFoundException("Yenilənmək üçün janr tapılmadı.");
 
             return Ok("Janr uğurla yeniləndi.");
         }
@@ -59,7 +59,7 @@ namespace FridayFilm.WebApi.Controllers;
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _genreService.DeleteAsync(id);
-            if (!result) return NotFound("Silinmək üçün janr tapılmadı.");
+            if (!result) throw new FridayFilm.Application.Exceptions.NotFoundException("Silinmək üçün janr tapılmadı.");
 
             return Ok("Janr uğurla silindi.");
         }

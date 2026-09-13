@@ -11,10 +11,12 @@ namespace FridayFilm.Persistence.Services;
 public sealed class RoleService : IRoleService
 {
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly FridayFilm.Persistence.Contexts.FridayFilmDbContext _context;
 
-    public RoleService(RoleManager<IdentityRole> roleManager)
+    public RoleService(RoleManager<IdentityRole> roleManager, FridayFilm.Persistence.Contexts.FridayFilmDbContext context)
     {
         _roleManager = roleManager;
+        _context = context;
     }
 
     public async Task<IReadOnlyCollection<RoleResponse>> GetAllAsync()
@@ -47,6 +49,7 @@ public sealed class RoleService : IRoleService
 
     public async Task CreateAsync(CreateRoleRequest request)
     {
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         var roleName = request.Name.Trim();
 
         if (await _roleManager.RoleExistsAsync(roleName))
@@ -80,18 +83,23 @@ public sealed class RoleService : IRoleService
                 EnsureSucceeded(result);
             }
         }
+        await transaction.CommitAsync();
     }
 
     public async Task UpdateAsync(
         string roleId,
         UpdateRoleRequest request)
     {
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         var role =
             await _roleManager.FindByIdAsync(roleId)
             ?? throw new NotFoundException(
                 "Rol tapılmadı.");
 
         var roleName = request.Name.Trim();
+
+        if (role.Name is AppRoles.Admin or AppRoles.User)
+            throw new ConflictException("Admin və User sistem rolları seeder tərəfindən idarə olunur. Yeni xüsusi rol yaradın.");
 
         var roleWithSameName =
             await _roleManager.FindByNameAsync(roleName);
@@ -116,6 +124,7 @@ public sealed class RoleService : IRoleService
         await SynchronizePermissionsAsync(
             role,
             requestedPermissions);
+        await transaction.CommitAsync();
     }
 
     private async Task SynchronizePermissionsAsync(
@@ -192,7 +201,8 @@ public sealed class RoleService : IRoleService
                 $"{string.Join(", ", invalidPermissions)}");
         }
 
-        return result;
+        return result.Select(value => Permissions.All.First(p =>
+            string.Equals(p, value, StringComparison.OrdinalIgnoreCase))).ToArray();
     }
 
     private static void EnsureSucceeded(

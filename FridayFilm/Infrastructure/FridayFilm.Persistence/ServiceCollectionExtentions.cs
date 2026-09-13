@@ -34,7 +34,7 @@ public static class ServiceCollectionExtentions
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<FridayFilmDbContext>()
-            .AddSignInManager().AddDefaultTokenProviders(); ;
+            .AddSignInManager().AddDefaultTokenProviders();
 
         services.AddScoped<IAuthenticationService,AuthenticationService>();
         services.AddScoped<IRoleService, RoleService>();

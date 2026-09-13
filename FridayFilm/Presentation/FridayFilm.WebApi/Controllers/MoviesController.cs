@@ -18,6 +18,20 @@ public sealed class MoviesController : ControllerBase
         _movieService = movieService;
     }
 
+    [HttpPost("cover")]
+    [Authorize]
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> UploadCover(IFormFile file, [FromKeyedServices("cloudinary")] IFileService files)
+    {
+        if (!User.HasClaim(CustomClaimTypes.Permission, Permissions.Movies.Create) &&
+            !User.HasClaim(CustomClaimTypes.Permission, Permissions.Movies.Update))
+            return Forbid();
+        if (file.Length is <= 0 or > 5 * 1024 * 1024 ||
+            file.ContentType is not ("image/jpeg" or "image/png" or "image/webp"))
+            throw new FridayFilm.Application.Exceptions.ValidationException("Maksimum 5 MB JPEG, PNG və ya WebP seçin.");
+        return Ok(new { Url = await files.UploadAsync("movies", file) });
+    }
+
     [HttpPost]
     [Authorize(Policy = Permissions.Movies.Create)]
     public async Task<IActionResult> Create([FromBody] CreateMovieRequest request, CancellationToken cancellationToken)
@@ -26,12 +40,12 @@ public sealed class MoviesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, new { Id = id });
     }
 
-    [Authorize(Policy = Permissions.Movies.Read)]
+    [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll([FromQuery] MovieQueryRequest request, CancellationToken cancellationToken)
         => Ok(await _movieService.GetAllAsync(request, cancellationToken));
 
-    [Authorize(Policy = Permissions.Movies.Read)]
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await _movieService.GetByIdAsync(id, cancellationToken));

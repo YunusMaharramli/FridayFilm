@@ -21,7 +21,11 @@ public class GlobalExceptionHandler
         {
             await _next(context);
         }
-        catch (Exception exception)
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
+        {
+            // The client disconnected; there is no response left to write.
+        }
+        catch (Exception exception) when (!context.Response.HasStarted)
         {
             _logger.LogError(
                 exception,
@@ -37,6 +41,9 @@ public class GlobalExceptionHandler
 
                 ArgumentException =>
                     StatusCodes.Status400BadRequest,
+                Microsoft.AspNetCore.Http.BadHttpRequestException badRequest => badRequest.StatusCode,
+                FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
+                Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException => StatusCodes.Status409Conflict,
 
                 UnauthorizedException =>
                     StatusCodes.Status401Unauthorized,
@@ -49,6 +56,8 @@ public class GlobalExceptionHandler
 
                 ConflictException =>
                     StatusCodes.Status409Conflict,
+                Microsoft.EntityFrameworkCore.DbUpdateException { InnerException: Npgsql.PostgresException { SqlState: "23505" or "23503" } } =>
+                    StatusCodes.Status409Conflict,
 
                 _ =>
                     StatusCodes.Status500InternalServerError
@@ -57,6 +66,10 @@ public class GlobalExceptionHandler
             var message =
                 statusCode == StatusCodes.Status500InternalServerError
                     ? "An unexpected server error occurred."
+                    : exception is Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException
+                    ? "Məlumat başqa sorğu tərəfindən dəyişdirilib. Yenidən cəhd edin."
+                    : exception is Microsoft.EntityFrameworkCore.DbUpdateException
+                    ? "Məlumat artıq mövcuddur və ya başqa məlumatla əlaqəlidir."
                     : exception.Message;
 
             context.Response.StatusCode = statusCode;

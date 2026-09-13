@@ -6,5 +6,5 @@ namespace FridayFilm.Application.Dtos.GenreDtos;
 
 public class UpdateGenreRequest
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

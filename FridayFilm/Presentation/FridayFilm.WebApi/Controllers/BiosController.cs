@@ -17,7 +17,7 @@ public class BiosController : ControllerBase
         _bioService = bioService;
     }
 
-    [Authorize(Policy = Permissions.Bios.Read)]
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -25,7 +25,7 @@ public class BiosController : ControllerBase
         return Ok(bios);
     }
 
-    [Authorize(Policy = Permissions.Bios.Read)]
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {

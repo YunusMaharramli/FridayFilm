@@ -16,8 +16,25 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Identity;
+using FridayFilm.Persistence.Users;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options => options.AddPolicy("Frontend", policy =>
+{
+    var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+    if (origins.Length > 0) policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
+}));
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("auth", context => RateLimitPartition.GetFixedWindowLimiter(
+        context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+});
 
 builder.Services.AddControllers(options =>
 {
@@ -87,6 +104,35 @@ builder.Services
     .AddJwtBearer(options =>
     {
         options.MapInboundClaims = false;
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var manager = context.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                var id = context.Principal?.FindFirst("sub")?.Value;
+                var user = id is null ? null : await manager.FindByIdAsync(id);
+                if (user is null || !user.EmailConfirmed || await manager.IsLockedOutAsync(user))
+                {
+                    context.Fail("Hesab təsdiqlənməyib və ya bloklanıb.");
+                    return;
+                }
+                // Enforce current role permissions, including changes made after token issuance.
+                var identity = (System.Security.Claims.ClaimsIdentity)context.Principal!.Identity!;
+                foreach (var claim in identity.FindAll(CustomClaimTypes.Permission).ToArray())
+                    identity.RemoveClaim(claim);
+                var roleManager = context.HttpContext.RequestServices.GetRequiredService<RoleManager<IdentityRole>>();
+                var permissions = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var roleName in await manager.GetRolesAsync(user))
+                {
+                    var role = await roleManager.FindByNameAsync(roleName);
+                    if (role is null) continue;
+                    foreach (var claim in await roleManager.GetClaimsAsync(role))
+                        if (claim.Type == CustomClaimTypes.Permission) permissions.Add(claim.Value);
+                }
+                foreach (var permission in permissions)
+                    identity.AddClaim(new System.Security.Claims.Claim(CustomClaimTypes.Permission, permission));
+            }
+        };
 
         options.TokenValidationParameters =
             new TokenValidationParameters
@@ -158,10 +204,27 @@ builder.Services.AddDbContext<FridayFilmDbContext>(options =>
 
 var app = builder.Build();
 
-await AdminRoleSeeder.SeedAsync(app.Services);
-await UserRoleSeeder.SeedAsync(app.Services);
+if (builder.Configuration.GetValue("Database:SeedRoles", true))
+{
+    await AdminRoleSeeder.SeedAsync(app.Services);
+    await UserRoleSeeder.SeedAsync(app.Services);
+}
 
 app.UseMiddleware<GlobalExceptionHandler>();
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+    var message = response.StatusCode switch
+    {
+        401 => "Davam etmək üçün hesabınıza daxil olun.",
+        403 => "Bu əməliyyat üçün icazəniz yoxdur.",
+        404 => "Resurs tapılmadı.",
+        429 => "Çox sorğu göndərildi. Bir dəqiqə sonra yenidən sınayın.",
+        _ => "Sorğu yerinə yetirilə bilmədi."
+    };
+    await response.WriteAsJsonAsync(new { StatusCode = response.StatusCode, Message = message,
+        Path = context.HttpContext.Request.Path.Value, TraceId = context.HttpContext.TraceIdentifier });
+});
 
 if (app.Environment.IsDevelopment())
 {
@@ -170,12 +233,16 @@ if (app.Environment.IsDevelopment())
     {
         // Swagger açılanda birbaşa endpointləri görmək üçün
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "FridayFilm API v1");
-        c.RoutePrefix = string.Empty; // localhost:port yazan kimi birbaşa Swagger açılsın
+        c.RoutePrefix = "swagger";
     });
 }
 
-app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("Frontend");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

@@ -32,6 +32,8 @@ public class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : 
 
         if (orderBy is not null)
             query = orderBy(query);
+        else
+            query = query.OrderByDescending(x => x.CreatedDate).ThenBy(x => x.Id);
 
         if (skip.HasValue)
             query = query.Skip(skip.Value);
@@ -39,7 +41,7 @@ public class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : 
         if (take.HasValue)
             query = query.Take(take.Value);
 
-        return await query.ToListAsync();
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<TEntity?> GetAsync(
@@ -49,12 +51,12 @@ public class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : 
         IQueryable<TEntity> query = _dbSet.AsQueryable();
         if (predicate is not null)
             query = query.Where(predicate);
-        return await query.FirstOrDefaultAsync();
+        return await query.FirstOrDefaultAsync(cancellationToken);
 
     }
     public async Task<TEntity?> GetByIdAsync(Guid id)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
     }
 
     public IQueryable<TEntity> Query()

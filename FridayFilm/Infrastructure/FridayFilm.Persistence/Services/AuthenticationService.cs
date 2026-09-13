@@ -18,6 +18,7 @@ public sealed class AuthenticationService : IAuthenticationService
     private readonly ITokenService _tokenService;
     private readonly FridayFilmDbContext _dbContext;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly Microsoft.Extensions.Logging.ILogger<AuthenticationService> _logger;
 
     public AuthenticationService(
         UserManager<ApplicationUser> userManager,
@@ -25,7 +26,8 @@ public sealed class AuthenticationService : IAuthenticationService
         RoleManager<IdentityRole> roleManager,
         ITokenService tokenService,
         IEmailService emailService,
-        FridayFilmDbContext dbContext)
+        FridayFilmDbContext dbContext,
+        Microsoft.Extensions.Logging.ILogger<AuthenticationService> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -33,19 +35,22 @@ public sealed class AuthenticationService : IAuthenticationService
         _tokenService = tokenService;
         _emailService = emailService;
         _dbContext = dbContext;
+        _logger = logger;
     }
 
-    public async Task<AuthResponse> RegisterAsync(
-        RegisterRequest request,
-        CancellationToken cancellationToken = default)
+    public async Task<RegisterResponse> RegisterAsync(
+    RegisterRequest request,
+    CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
         var email = request.Email.Trim();
 
         var existingUser = await _userManager.FindByEmailAsync(email);
+
         if (existingUser is not null)
         {
-            throw new ConflictException("This Email is already in use.");
+            throw new ConflictException("This email is already in use.");
         }
 
         var user = new ApplicationUser
@@ -55,21 +60,49 @@ public sealed class AuthenticationService : IAuthenticationService
             UserName = email
         };
 
-        var createResult = await _userManager.CreateAsync(user, request.Password);
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        var createResult =
+            await _userManager.CreateAsync(user, request.Password);
+
         if (!createResult.Succeeded)
         {
-            var errors = string.Join(" ", createResult.Errors.Select(x => x.Description));
+            var errors = string.Join(
+                " ",
+                createResult.Errors.Select(x => x.Description));
+
             throw new ValidationException(errors);
         }
 
-        await _userManager.AddToRoleAsync(user, AppRoles.Admin);
+        var roleResult =
+            await _userManager.AddToRoleAsync(user, AppRoles.User);
 
-        // 1. E-poçt təsdiqləmə tokeni yaradılır və məktub göndərilir
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await _emailService.SendVerificationEmailAsync(user.Email, user.Id, token);
+        if (!roleResult.Succeeded)
+        {
+            var errors = string.Join(
+                " ",
+                roleResult.Errors.Select(x => x.Description));
 
-        // 2. Qeydiyyatdan dərhal sonra tokeni qaytarırıq (öz istəyinə uyğun saxlanıldı)
-        return await CreateAuthResponseAsync(user, cancellationToken);
+            throw new ValidationException(errors);
+        }
+
+        await transaction.CommitAsync(cancellationToken);
+        var token =
+            await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        try
+        {
+            await _emailService.SendVerificationEmailAsync(user.Email!, user.Id, token);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Microsoft.Extensions.Logging.LoggerExtensions.LogError(_logger, exception,
+                "Verification email delivery failed after account creation.");
+            return new RegisterResponse(email, "Hesab yaradıldı, amma təsdiq məktubu göndərilmədi. Bir az sonra 'Emaili təsdiqlə' bölməsindən yenidən məktub istəyin.");
+        }
+
+        return new RegisterResponse(
+            user.Email!,
+            "Registration was successful. Please verify your email.");
     }
 
     public async Task<AuthResponse> LoginAsync(
@@ -111,6 +144,8 @@ public sealed class AuthenticationService : IAuthenticationService
         ApplicationUser user,
         CancellationToken cancellationToken)
     {
+        if (!user.EmailConfirmed || await _userManager.IsLockedOutAsync(user))
+            throw new UnauthorizedException("Email təsdiqlənməyib və ya hesab müvəqqəti bloklanıb.");
         var roles = await _userManager.GetRolesAsync(user);
         var permissions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -165,9 +200,23 @@ public sealed class AuthenticationService : IAuthenticationService
         {
             throw new UnauthorizedException("Refresh token is invalid or expired.");
         }
+        if (!storedToken.User.EmailConfirmed)
+        {
+            throw new UnauthorizedException(
+                "Please verify your email before accessing your account.");
+        }
 
-        storedToken.RevokedAtUtc = now;
-        return await CreateAuthResponseAsync(storedToken.User, cancellationToken);
+        if (await _userManager.IsLockedOutAsync(storedToken.User))
+            throw new UnauthorizedException("The account is temporarily locked.");
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        var consumed = await _dbContext.RefreshTokens
+            .Where(x => x.Id == storedToken.Id && x.RevokedAtUtc == null && x.ExpiresAtUtc > now)
+            .ExecuteUpdateAsync(s => s.SetProperty(x => x.RevokedAtUtc, now), cancellationToken);
+        if (consumed != 1)
+            throw new UnauthorizedException("Refresh token artıq istifadə olunub.");
+        var response = await CreateAuthResponseAsync(storedToken.User, cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return response;
     }
 
     public async Task LogoutAsync(
@@ -189,6 +238,15 @@ public sealed class AuthenticationService : IAuthenticationService
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task ResendVerificationAsync(string email, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var user = await _userManager.FindByEmailAsync(email.Trim());
+        if (user is null || user.EmailConfirmed) return;
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        await _emailService.SendVerificationEmailAsync(user.Email!, user.Id, token);
+    }
+
     public async Task VerifyEmailAsync(string userId, string token, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -205,4 +263,4 @@ public sealed class AuthenticationService : IAuthenticationService
             throw new ValidationException("Təsdiqləmə linki səhvdir və ya vaxtı keçib.");
         }
     }
-} 
+}

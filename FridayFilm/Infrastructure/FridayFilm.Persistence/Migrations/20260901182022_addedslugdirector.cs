@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FridayFilm.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class addedslugdirector : Migration
+    public partial class AddedSlugDirector : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
