@@ -1,5 +1,6 @@
-﻿using FridayFilm.Domain.Common;
+using FridayFilm.Domain.Common;
 using FridayFilm.Domain.Entities;
+using FridayFilm.Persistence.Seed;
 using FridayFilm.Persistence.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,79 @@ public class FridayFilmDbContext:IdentityDbContext<ApplicationUser>
             new Category { Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"), Name = "Crime", Slug = "crime", CreatedDate = seedDate },
             new Category { Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), Name = "Family", Slug = "family", CreatedDate = seedDate },
             new Category { Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"), Name = "Historical", Slug = "historical", CreatedDate = seedDate }
+        );
+
+        // Movie <-> Director (DirectorMovie join cedveli)
+        modelBuilder.Entity("DirectorMovie").HasData(
+            new { DirectorsId = SeedIds.Directors.ChristopherNolan, MoviesId = SeedIds.Movies.Inception },
+            new { DirectorsId = SeedIds.Directors.ChristopherNolan, MoviesId = SeedIds.Movies.TheDarkKnight },
+            new { DirectorsId = SeedIds.Directors.ChristopherNolan, MoviesId = SeedIds.Movies.Oppenheimer },
+            new { DirectorsId = SeedIds.Directors.ChristopherNolan, MoviesId = SeedIds.Movies.Interstellar },
+            new { DirectorsId = SeedIds.Directors.QuentinTarantino, MoviesId = SeedIds.Movies.PulpFiction },
+            new { DirectorsId = SeedIds.Directors.QuentinTarantino, MoviesId = SeedIds.Movies.DjangoUnchained },
+            new { DirectorsId = SeedIds.Directors.GretaGerwig, MoviesId = SeedIds.Movies.Barbie },
+            new { DirectorsId = SeedIds.Directors.GretaGerwig, MoviesId = SeedIds.Movies.LittleWomen },
+            new { DirectorsId = SeedIds.Directors.LanaWachowski, MoviesId = SeedIds.Movies.TheMatrix },
+            new { DirectorsId = SeedIds.Directors.GeorgeMiller, MoviesId = SeedIds.Movies.MadMaxFuryRoad },
+            new { DirectorsId = SeedIds.Directors.DarrenAronofsky, MoviesId = SeedIds.Movies.BlackSwan },
+            new { DirectorsId = SeedIds.Directors.MartinScorsese, MoviesId = SeedIds.Movies.TheWolfOfWallStreet }
+        );
+
+        // Movie <-> Actor (ActorMovie join cedveli)
+        modelBuilder.Entity("ActorMovie").HasData(
+            new { ActorsId = SeedIds.Actors.LeonardoDiCaprio, MoviesId = SeedIds.Movies.Inception },
+            new { ActorsId = SeedIds.Actors.TomHardy, MoviesId = SeedIds.Movies.Inception },
+            new { ActorsId = SeedIds.Actors.CillianMurphy, MoviesId = SeedIds.Movies.Inception },
+            new { ActorsId = SeedIds.Actors.ChristianBale, MoviesId = SeedIds.Movies.TheDarkKnight },
+            new { ActorsId = SeedIds.Actors.CillianMurphy, MoviesId = SeedIds.Movies.TheDarkKnight },
+            new { ActorsId = SeedIds.Actors.CillianMurphy, MoviesId = SeedIds.Movies.Oppenheimer },
+            new { ActorsId = SeedIds.Actors.LeonardoDiCaprio, MoviesId = SeedIds.Movies.DjangoUnchained },
+            new { ActorsId = SeedIds.Actors.MargotRobbie, MoviesId = SeedIds.Movies.Barbie },
+            new { ActorsId = SeedIds.Actors.MerylStreep, MoviesId = SeedIds.Movies.LittleWomen },
+            new { ActorsId = SeedIds.Actors.KeanuReeves, MoviesId = SeedIds.Movies.TheMatrix },
+            new { ActorsId = SeedIds.Actors.TomHardy, MoviesId = SeedIds.Movies.MadMaxFuryRoad },
+            new { ActorsId = SeedIds.Actors.CharlizeTheron, MoviesId = SeedIds.Movies.MadMaxFuryRoad },
+            new { ActorsId = SeedIds.Actors.NataliePortman, MoviesId = SeedIds.Movies.BlackSwan },
+            new { ActorsId = SeedIds.Actors.LeonardoDiCaprio, MoviesId = SeedIds.Movies.TheWolfOfWallStreet },
+            new { ActorsId = SeedIds.Actors.MargotRobbie, MoviesId = SeedIds.Movies.TheWolfOfWallStreet }
+        );
+
+        // Movie <-> Genre (GenreMovie join cedveli)
+        modelBuilder.Entity("GenreMovie").HasData(
+            new { GenresId = SeedIds.Genres.Action, MoviesId = SeedIds.Movies.Inception },
+            new { GenresId = SeedIds.Genres.ScienceFiction, MoviesId = SeedIds.Movies.Inception },
+            new { GenresId = SeedIds.Genres.Thriller, MoviesId = SeedIds.Movies.Inception },
+            new { GenresId = SeedIds.Genres.Action, MoviesId = SeedIds.Movies.TheDarkKnight },
+            new { GenresId = SeedIds.Genres.Crime, MoviesId = SeedIds.Movies.TheDarkKnight },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.TheDarkKnight },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.Oppenheimer },
+            new { GenresId = SeedIds.Genres.Historical, MoviesId = SeedIds.Movies.Oppenheimer },
+            new { GenresId = SeedIds.Genres.Biography, MoviesId = SeedIds.Movies.Oppenheimer },
+            new { GenresId = SeedIds.Genres.Adventure, MoviesId = SeedIds.Movies.Interstellar },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.Interstellar },
+            new { GenresId = SeedIds.Genres.ScienceFiction, MoviesId = SeedIds.Movies.Interstellar },
+            new { GenresId = SeedIds.Genres.Crime, MoviesId = SeedIds.Movies.PulpFiction },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.PulpFiction },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.DjangoUnchained },
+            new { GenresId = SeedIds.Genres.Adventure, MoviesId = SeedIds.Movies.DjangoUnchained },
+            new { GenresId = SeedIds.Genres.Crime, MoviesId = SeedIds.Movies.DjangoUnchained },
+            new { GenresId = SeedIds.Genres.Comedy, MoviesId = SeedIds.Movies.Barbie },
+            new { GenresId = SeedIds.Genres.Adventure, MoviesId = SeedIds.Movies.Barbie },
+            new { GenresId = SeedIds.Genres.Fantasy, MoviesId = SeedIds.Movies.Barbie },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.LittleWomen },
+            new { GenresId = SeedIds.Genres.Romance, MoviesId = SeedIds.Movies.LittleWomen },
+            new { GenresId = SeedIds.Genres.Action, MoviesId = SeedIds.Movies.TheMatrix },
+            new { GenresId = SeedIds.Genres.ScienceFiction, MoviesId = SeedIds.Movies.TheMatrix },
+            new { GenresId = SeedIds.Genres.Action, MoviesId = SeedIds.Movies.MadMaxFuryRoad },
+            new { GenresId = SeedIds.Genres.Adventure, MoviesId = SeedIds.Movies.MadMaxFuryRoad },
+            new { GenresId = SeedIds.Genres.ScienceFiction, MoviesId = SeedIds.Movies.MadMaxFuryRoad },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.BlackSwan },
+            new { GenresId = SeedIds.Genres.Thriller, MoviesId = SeedIds.Movies.BlackSwan },
+            new { GenresId = SeedIds.Genres.Mystery, MoviesId = SeedIds.Movies.BlackSwan },
+            new { GenresId = SeedIds.Genres.Crime, MoviesId = SeedIds.Movies.TheWolfOfWallStreet },
+            new { GenresId = SeedIds.Genres.Comedy, MoviesId = SeedIds.Movies.TheWolfOfWallStreet },
+            new { GenresId = SeedIds.Genres.Drama, MoviesId = SeedIds.Movies.TheWolfOfWallStreet },
+            new { GenresId = SeedIds.Genres.Biography, MoviesId = SeedIds.Movies.TheWolfOfWallStreet }
         );
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

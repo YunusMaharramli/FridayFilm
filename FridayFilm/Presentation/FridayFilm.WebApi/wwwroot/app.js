@@ -1,7 +1,7 @@
 const main = document.querySelector('#main');
 const modal = document.querySelector('#modal');
 const content = document.querySelector('#modal-content');
-const state = { session: null, page: 1, search: '', category: '', sort: 'newest', admin: 'movies', people: 'actors' };
+const state = { session: null, page: 1, search: '', category: '', sort: 'newest', admin: 'movies', people: 'actors', pendingEmail: '' };
 let refreshPromise, renderVersion = 0, toastTimer;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const safeUrl = value => { if (typeof value !== 'string' || !value.trim()) return ''; try { const u = new URL(value, location.origin); return ['https:', 'http:'].includes(u.protocol) ? u.href : ''; } catch { return ''; } };
@@ -74,22 +74,58 @@ const field = (name,label,value='',type='text',attrs='') => `<div><label for="f-
 const area = (name,label,value='',attrs='') => `<div class="full"><label for="f-${name}">${label}</label><textarea id="f-${name}" name="${name}" ${attrs}>${esc(value)}</textarea></div>`;
 function authPage(mode) {
   const register = mode === 'register', resend = mode === 'resend';
-  main.innerHTML = `<div class="page"><section class="auth-page"><p class="eyebrow">FRIDAYFILM HESABIN</p><h1>${register?'Kino dünyana qoşul':resend?'Təsdiq məktubu':'Yenidən xoş gəldin'}</h1><p class="notice">${register?'Qeydiyyatdan sonra emailinə göndərilən linklə hesabını təsdiqlə.':resend?'Məktub gəlməyibsə, email ünvanını yaz. Spam qovluğunu da yoxla.':'Sevimli hekayələrinə bir addım qalıb.'}</p><form id="auth-form" data-mode="${mode}">${register?field('fullName','Ad və soyad','','text','required maxlength="100" autocomplete="name"'):''}${field('email','Email','','email','required maxlength="256" autocomplete="email"')}${!resend?field('password','Şifrə','','password',`required maxlength="100" ${register?'minlength="8" autocomplete="new-password"':'autocomplete="current-password"'}`):''}${register?'<p class="notice">Şifrə ən azı 8 simvol, böyük və kiçik hərf, rəqəm və xüsusi simvoldan ibarət olmalıdır.</p>':''}<p class="form-error" role="alert"></p><p class="form-success" role="status"></p><div class="form-actions">${button(register?'Qeydiyyatdan keç':resend?'Yenidən göndər':'Daxil ol','','primary')}</div></form><div class="form-actions"><a class="subtle-link" href="${register?'#login':'#register'}">${register?'Hesabım var':'Hesab yarat'}</a><a class="subtle-link" href="#resend">Emaili təsdiqlə</a></div></section></div>`;
+  main.innerHTML = `<div class="page"><section class="auth-page"><p class="eyebrow">FRIDAYFILM HESABIN</p><h1>${register?'Kino dünyana qoşul':resend?'Təsdiq məktubu':'Yenidən xoş gəldin'}</h1><p class="notice">${register?'Qeydiyyatdan sonra emailinə göndərilən linklə hesabını təsdiqlə.':resend?'Məktub gəlməyibsə, email ünvanını yaz. Spam qovluğunu da yoxla.':'Sevimli hekayələrinə bir addım qalıb.'}</p><form id="auth-form" data-mode="${mode}">${register?field('fullName','Ad və soyad','','text','required maxlength="100" autocomplete="name"'):''}${field('email','Email','','email','required maxlength="256" autocomplete="email"')}${!resend?field('password','Şifrə','','password',`required maxlength="100" ${register?'minlength="8" autocomplete="new-password"':'autocomplete="current-password"'}`):''}${register?'<p class="notice">Şifrə ən azı 8 simvol, böyük və kiçik hərf, rəqəm və xüsusi simvoldan ibarət olmalıdır.</p>':''}<p class="form-error" role="alert"></p><p class="form-success" role="status"></p><div class="form-actions">${button(register?'Qeydiyyatdan keç':resend?'Yenidən göndər':'Daxil ol','','primary')}</div></form><div class="form-actions"><a class="subtle-link" href="${register?'#login':'#register'}">${register?'Hesabım var':'Hesab yarat'}</a></div></section></div>`;
 }
 async function verifyPage() {
   const query = new URLSearchParams(location.search);
   const userId = query.get('userId'), token = query.get('token');
   // Remove sensitive verification parameters from browser history immediately.
   history.replaceState(null,'',`${location.pathname}#verify-email`);
-  main.innerHTML = `<div class="page"><section class="auth-page"><p class="eyebrow">EMAIL TƏSDİQİ</p><h1>Hesabını təsdiqlə</h1><p class="notice">Email ünvanını təsdiqləmək üçün aşağıdakı düyməni bas.</p><p class="form-error" role="alert"></p>${button('Emailimi təsdiqlə','id="verify-button"','primary')}</section></div>`;
-  document.querySelector('#verify-button').onclick = async event => {
-    event.target.disabled = true;
+  main.innerHTML = `<div class="page"><section class="auth-page"><p class="eyebrow">EMAIL TƏSDİQİ</p><h1>Təsdiqlənir…</h1><p class="notice">Bir neçə saniyə gözlə.</p></section></div>`;
+  try {
+    if (!userId || !token) throw new Error('Link məlumatları çatışmır. Emaildəki linki yenidən açın və ya yeni məktub istəyin.');
+    await api(`auth/verify-email?${new URLSearchParams({userId,token})}`);
+    main.innerHTML = `<div class="page">${empty('Email təsdiqləndi','Hesabın hazırdır. İndi daxil ola bilərsən.')}<div class="form-actions"><a class="button primary" href="#login">Daxil ol</a></div></div>`;
+  } catch(error) {
+    main.innerHTML = `<div class="page">${empty('Təsdiq alınmadı',error.message)}<div class="form-actions"><a class="button primary" href="#resend">Yeni məktub istə</a><a class="button" href="#login">Daxil ol</a></div></div>`;
+  }
+}
+function cooldown(el, seconds) {
+  const label = el.dataset.label ??= el.textContent;
+  let left = seconds;
+  el.disabled = true; el.textContent = `${label} (${left})`;
+  const timer = setInterval(() => {
+    left -= 1;
+    if (left <= 0) { clearInterval(timer); el.disabled = false; el.textContent = label; }
+    else el.textContent = `${label} (${left})`;
+  }, 1000);
+}
+function pendingPage() {
+  const email = state.pendingEmail || '';
+  const target = email ? `<strong>${esc(email)}</strong> ünvanına` : 'Qeydiyyat etdiyin email ünvanına';
+  main.innerHTML = `<div class="page"><section class="auth-page"><p class="eyebrow">SON ADDIM</p><h1>Emailini yoxla</h1><p class="notice">${target} təsdiq linki göndərdik. Məktubdakı linki aç — hesabın avtomatik təsdiqlənəcək. Spam qovluğunu da yoxlamağı unutma.</p><p class="form-error" role="alert"></p><p class="form-success" role="status"></p><p class="notice" id="resend-hint">Məktub gəlməsə, <strong id="resend-count">30</strong> saniyədən sonra yenidən göndərə bilərsən.</p><div class="form-actions" id="resend-box" style="display:none">${button('Məktubu yenidən göndər','id="resend-now"','ghost')}</div><div class="form-actions"><a class="button primary" href="#login">Daxil ol</a><a class="subtle-link" href="#home">Ana səhifəyə qayıt</a></div></section></div>`;
+  const hint = document.querySelector('#resend-hint'), count = document.querySelector('#resend-count'), box = document.querySelector('#resend-box');
+  let left = 30;
+  const timer = setInterval(() => {
+    if (!document.body.contains(count)) { clearInterval(timer); return; }
+    left -= 1;
+    if (left <= 0) { clearInterval(timer); hint.style.display = 'none'; box.style.display = ''; }
+    else count.textContent = left;
+  }, 1000);
+  document.querySelector('#resend-now').onclick = async event => {
+    if (!state.pendingEmail) { location.hash = 'resend'; return; }
+    const error = main.querySelector('.form-error'), success = main.querySelector('.form-success');
+    error.textContent = ''; success.textContent = ''; event.target.disabled = true;
     try {
-      if (!userId || !token) throw new Error('Link məlumatları çatışmır. Emaildəki linki yenidən açın və ya yeni məktub istəyin.');
-      await api(`auth/verify-email?${new URLSearchParams({userId,token})}`);
-      main.innerHTML = `<div class="page">${empty('Email təsdiqləndi','İndi hesabınıza daxil ola bilərsiniz.')}<div class="form-actions"><a class="button primary" href="#login">Daxil ol</a></div></div>`;
-    } catch(error) { document.querySelector('.form-error').textContent = error.message; event.target.disabled = false; }
+      await api('auth/resend-verification', { method:'POST', body:{ email: state.pendingEmail } });
+      success.textContent = 'Məktub yenidən göndərildi. Emailini yoxla.';
+      cooldown(event.target, 30);
+    } catch(err) { error.textContent = err.message; event.target.disabled = false; }
   };
+}
+function resendPage() {
+  const email = state.pendingEmail || '';
+  main.innerHTML = `<div class="page"><section class="auth-page"><p class="eyebrow">TƏSDİQ MƏKTUBU</p><h1>Məktubu yenidən göndər</h1><p class="notice">Email ünvanını yaz, təsdiq linkini yenidən göndərək.</p><form id="resend-form">${field('email','Email',email,'email','required maxlength="256" autocomplete="email"')}<p class="form-error" role="alert"></p><p class="form-success" role="status"></p><div class="form-actions">${button('Göndər','','primary')}</div></form><div class="form-actions"><a class="subtle-link" href="#login">Daxil ol</a><a class="subtle-link" href="#home">Ana səhifəyə qayıt</a></div></section></div>`;
 }
 async function people(version) {
   const rows = await all(state.people);
@@ -137,8 +173,17 @@ document.addEventListener('submit',event=>{
     const data=Object.fromEntries(new FormData(form)); const mode=form.dataset.mode;
     const result=await api(`auth/${mode==='resend'?'resend-verification':mode}`,{method:'POST',body:data});
     if(mode==='login'){setSession(result);location.hash='home';toast('Xoş gəldin!');}
-    else {form.querySelector('.form-success').textContent=result.message;form.reset();}
+    else {state.pendingEmail=result?.email||data.email||'';form.reset();if(result?.message)toast(result.message);location.hash='verify-pending';}
   });
+  if(form.id==='resend-form'){
+    const submit=form.querySelector('button:not([type="button"])');
+    const error=form.querySelector('.form-error'), success=form.querySelector('.form-success');
+    error.textContent=''; success.textContent=''; submit.disabled=true;
+    const email=String(new FormData(form).get('email')||'').trim();
+    api('auth/resend-verification',{method:'POST',body:{email}})
+      .then(()=>{state.pendingEmail=email;success.textContent='Məktub yenidən göndərildi. Emailini yoxla.';cooldown(submit,30);})
+      .catch(err=>{error.textContent=err.message;submit.disabled=false;});
+  }
   if(form.id==='editor-form') submitForm(form,async()=>{
     const data=new FormData(form), resource=form.dataset.resource, id=form.dataset.id;
     let body;
@@ -184,7 +229,10 @@ async function render() {
   document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===(page || 'home')));
   account();main.innerHTML=loading();
   try {
-    if(['login','register','resend'].includes(page)) authPage(page);
+    if(new URLSearchParams(location.search).get('token')) await verifyPage();
+    else if(['login','register'].includes(page)) authPage(page);
+    else if(page==='verify-pending') pendingPage();
+    else if(page==='resend') resendPage();
     else if(page==='verify-email') await verifyPage();
     else if(page==='movie' && id) await movieDetail(id,version);
     else if(page==='people') await people(version);
