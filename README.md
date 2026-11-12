@@ -1,5 +1,7 @@
 # FridayFilm
 
+[![CI](https://github.com/YunusMaharramli/FridayFilm/actions/workflows/ci.yml/badge.svg)](https://github.com/YunusMaharramli/FridayFilm/actions/workflows/ci.yml)
+
 **A movie catalog REST API built with ASP.NET Core, Clean Architecture and PostgreSQL.**
 
 Users browse and search movies, actors, directors and genres. Administrators manage the catalog and upload images. Access is controlled with JWT authentication and permission-based roles.
