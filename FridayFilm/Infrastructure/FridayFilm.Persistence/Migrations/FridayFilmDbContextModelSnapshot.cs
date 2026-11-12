@@ -35,6 +35,83 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasIndex("MoviesId");
 
                     b.ToTable("ActorMovie");
+
+                    b.HasData(
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555501"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555505"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555503"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555509"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555503"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555503"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555501"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000006")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555504"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000007")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555506"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000008")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555507"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555505"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000010")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555510"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000010")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555508"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000011")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555501"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        },
+                        new
+                        {
+                            ActorsId = new Guid("11111111-2222-3333-4444-555555555504"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        });
                 });
 
             modelBuilder.Entity("Director", b =>
@@ -119,6 +196,61 @@ namespace FridayFilm.Infrastructure.Migrations
                             IsDeleted = false,
                             Nationality = "American",
                             Slug = "greta-gerwig"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-3333-4444-5555-666666666604"),
+                            Bio = "Co-creator of The Matrix, a landmark of science fiction cinema.",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FullName = "Lana Wachowski",
+                            Gender = 2,
+                            IsDeleted = false,
+                            Nationality = "American",
+                            Slug = "lana-wachowski"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-3333-4444-5555-666666666605"),
+                            Bio = "Creator of the Mad Max franchise, known for practical action filmmaking.",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FullName = "George Miller",
+                            Gender = 1,
+                            IsDeleted = false,
+                            Nationality = "Australian",
+                            Slug = "george-miller"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-3333-4444-5555-666666666606"),
+                            Bio = "Known for psychologically intense films such as Black Swan and Requiem for a Dream.",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FullName = "Darren Aronofsky",
+                            Gender = 1,
+                            IsDeleted = false,
+                            Nationality = "American",
+                            Slug = "darren-aronofsky"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-3333-4444-5555-666666666607"),
+                            Bio = "One of the most influential directors in cinema history, famous for crime dramas.",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FullName = "Martin Scorsese",
+                            Gender = 1,
+                            IsDeleted = false,
+                            Nationality = "American",
+                            Slug = "martin-scorsese"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-3333-4444-5555-666666666608"),
+                            Bio = "Acclaimed for atmospheric science fiction including Arrival, Blade Runner 2049 and Dune.",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FullName = "Denis Villeneuve",
+                            Gender = 1,
+                            IsDeleted = false,
+                            Nationality = "Canadian",
+                            Slug = "denis-villeneuve"
                         });
                 });
 
@@ -135,6 +267,68 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasIndex("MoviesId");
 
                     b.ToTable("DirectorMovie");
+
+                    b.HasData(
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666601"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666601"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666601"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666601"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000004")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666602"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000005")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666602"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000006")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666603"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000007")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666603"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000008")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666604"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666605"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000010")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666606"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000011")
+                        },
+                        new
+                        {
+                            DirectorsId = new Guid("22222222-3333-4444-5555-666666666607"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        });
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.Actor", b =>
@@ -408,120 +602,120 @@ namespace FridayFilm.Infrastructure.Migrations
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Aksiya",
-                            Slug = "aksiya"
+                            Name = "Action",
+                            Slug = "action"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Komediya",
-                            Slug = "komediya"
+                            Name = "Comedy",
+                            Slug = "comedy"
                         },
                         new
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Dram",
-                            Slug = "dram"
+                            Name = "Drama",
+                            Slug = "drama"
                         },
                         new
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Qorxu",
-                            Slug = "qorxu"
+                            Name = "Horror",
+                            Slug = "horror"
                         },
                         new
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Elmi Fantastika",
-                            Slug = "elmi-fantastika"
+                            Name = "Science Fiction",
+                            Slug = "science-fiction"
                         },
                         new
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Romantika",
-                            Slug = "romantika"
+                            Name = "Romance",
+                            Slug = "romance"
                         },
                         new
                         {
                             Id = new Guid("77777777-7777-7777-7777-777777777777"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Triller",
-                            Slug = "triller"
+                            Name = "Thriller",
+                            Slug = "thriller"
                         },
                         new
                         {
                             Id = new Guid("88888888-8888-8888-8888-888888888888"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Sənədli",
-                            Slug = "senedli"
+                            Name = "Documentary",
+                            Slug = "documentary"
                         },
                         new
                         {
                             Id = new Guid("99999999-9999-9999-9999-999999999999"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Fantastika",
-                            Slug = "fantastika"
+                            Name = "Fantasy",
+                            Slug = "fantasy"
                         },
                         new
                         {
                             Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Animasiya",
-                            Slug = "animasiya"
+                            Name = "Animation",
+                            Slug = "animation"
                         },
                         new
                         {
                             Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Müəmma",
-                            Slug = "muemma"
+                            Name = "Mystery",
+                            Slug = "mystery"
                         },
                         new
                         {
                             Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Macəra",
-                            Slug = "macera"
+                            Name = "Adventure",
+                            Slug = "adventure"
                         },
                         new
                         {
                             Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Cinayət",
-                            Slug = "cinayet"
+                            Name = "Crime",
+                            Slug = "crime"
                         },
                         new
                         {
                             Id = new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Ailə",
-                            Slug = "aile"
+                            Name = "Family",
+                            Slug = "family"
                         },
                         new
                         {
                             Id = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                             CreatedDate = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            Name = "Tarixi",
-                            Slug = "tarixi"
+                            Name = "Historical",
+                            Slug = "historical"
                         });
                 });
 
@@ -553,6 +747,200 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("FilmImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000001"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000001"),
+                            PhotoUrl = "/images/movies/inception-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000002"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000001"),
+                            PhotoUrl = "/images/movies/inception-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000003"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000002"),
+                            PhotoUrl = "/images/movies/the-dark-knight-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000004"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000002"),
+                            PhotoUrl = "/images/movies/the-dark-knight-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000005"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000003"),
+                            PhotoUrl = "/images/movies/oppenheimer-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000006"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000003"),
+                            PhotoUrl = "/images/movies/oppenheimer-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000007"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000004"),
+                            PhotoUrl = "/images/movies/interstellar-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000008"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000004"),
+                            PhotoUrl = "/images/movies/interstellar-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000009"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000005"),
+                            PhotoUrl = "/images/movies/pulp-fiction-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000010"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000005"),
+                            PhotoUrl = "/images/movies/pulp-fiction-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000011"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000006"),
+                            PhotoUrl = "/images/movies/django-unchained-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000012"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000006"),
+                            PhotoUrl = "/images/movies/django-unchained-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000013"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000007"),
+                            PhotoUrl = "/images/movies/barbie-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000014"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000007"),
+                            PhotoUrl = "/images/movies/barbie-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000015"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000008"),
+                            PhotoUrl = "/images/movies/little-women-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000016"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000008"),
+                            PhotoUrl = "/images/movies/little-women-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000017"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000009"),
+                            PhotoUrl = "/images/movies/the-matrix-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000018"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000009"),
+                            PhotoUrl = "/images/movies/the-matrix-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000019"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000010"),
+                            PhotoUrl = "/images/movies/mad-max-fury-road-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000020"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000010"),
+                            PhotoUrl = "/images/movies/mad-max-fury-road-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000021"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000011"),
+                            PhotoUrl = "/images/movies/black-swan-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000022"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000011"),
+                            PhotoUrl = "/images/movies/black-swan-2.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000023"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000012"),
+                            PhotoUrl = "/images/movies/the-wolf-of-wall-street-1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("dddd0000-0000-0000-0000-000000000024"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            MovieId = new Guid("cccc0000-0000-0000-0000-000000000012"),
+                            PhotoUrl = "/images/movies/the-wolf-of-wall-street-2.jpg"
+                        });
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.Genre", b =>
@@ -578,6 +966,92 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000001"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000002"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000003"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Science Fiction"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Drama"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000005"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Thriller"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000006"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Crime"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000007"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Comedy"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000008"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Romance"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000009"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Mystery"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000010"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Fantasy"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000011"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Historical"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbb0000-0000-0000-0000-000000000012"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Name = "Biography"
+                        });
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.Language", b =>
@@ -601,6 +1075,36 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Languages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aaaa0000-0000-0000-0000-000000000001"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Lang = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Lang = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaa0000-0000-0000-0000-000000000003"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Lang = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaa0000-0000-0000-0000-000000000004"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            Lang = 4
+                        });
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.Movie", b =>
@@ -654,6 +1158,176 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasIndex("LanguageId");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000001"),
+                            CategoryId = new Guid("55555555-5555-5555-5555-555555555555"),
+                            CoverImg = "/images/movies/inception.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 28, 0, 0),
+                            IMDB = 8.8m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Inception",
+                            RateCount = 2400000,
+                            Year = 2010
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000002"),
+                            CategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CoverImg = "/images/movies/the-dark-knight.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 32, 0, 0),
+                            IMDB = 9.0m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "The Dark Knight",
+                            RateCount = 2900000,
+                            Year = 2008
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000003"),
+                            CategoryId = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+                            CoverImg = "/images/movies/oppenheimer.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 3, 0, 0, 0),
+                            IMDB = 8.3m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Oppenheimer",
+                            RateCount = 820000,
+                            Year = 2023
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000004"),
+                            CategoryId = new Guid("55555555-5555-5555-5555-555555555555"),
+                            CoverImg = "/images/movies/interstellar.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 49, 0, 0),
+                            IMDB = 8.7m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Interstellar",
+                            RateCount = 2100000,
+                            Year = 2014
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000005"),
+                            CategoryId = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            CoverImg = "/images/movies/pulp-fiction.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 34, 0, 0),
+                            IMDB = 8.9m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Pulp Fiction",
+                            RateCount = 2200000,
+                            Year = 1994
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000006"),
+                            CategoryId = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            CoverImg = "/images/movies/django-unchained.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 45, 0, 0),
+                            IMDB = 8.4m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Django Unchained",
+                            RateCount = 1700000,
+                            Year = 2012
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000007"),
+                            CategoryId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CoverImg = "/images/movies/barbie.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 1, 54, 0, 0),
+                            IMDB = 6.8m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Barbie",
+                            RateCount = 580000,
+                            Year = 2023
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000008"),
+                            CategoryId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CoverImg = "/images/movies/little-women.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 15, 0, 0),
+                            IMDB = 7.8m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Little Women",
+                            RateCount = 230000,
+                            Year = 2019
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000009"),
+                            CategoryId = new Guid("55555555-5555-5555-5555-555555555555"),
+                            CoverImg = "/images/movies/the-matrix.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 16, 0, 0),
+                            IMDB = 8.7m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "The Matrix",
+                            RateCount = 2000000,
+                            Year = 1999
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000010"),
+                            CategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CoverImg = "/images/movies/mad-max-fury-road.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 2, 0, 0, 0),
+                            IMDB = 8.1m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Mad Max: Fury Road",
+                            RateCount = 1100000,
+                            Year = 2015
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000011"),
+                            CategoryId = new Guid("77777777-7777-7777-7777-777777777777"),
+                            CoverImg = "/images/movies/black-swan.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 1, 48, 0, 0),
+                            IMDB = 8.0m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "Black Swan",
+                            RateCount = 750000,
+                            Year = 2010
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000012"),
+                            CategoryId = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            CoverImg = "/images/movies/the-wolf-of-wall-street.jpg",
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Duration = new TimeSpan(0, 3, 0, 0, 0),
+                            IMDB = 8.2m,
+                            IsDeleted = false,
+                            LanguageId = new Guid("aaaa0000-0000-0000-0000-000000000002"),
+                            Name = "The Wolf of Wall Street",
+                            RateCount = 1500000,
+                            Year = 2013
+                        });
                 });
 
             modelBuilder.Entity("FridayFilm.Domain.Entities.MovieDetail", b =>
@@ -683,6 +1357,212 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MovieDetails");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000001"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Dom Cobb yuxu içində məlumat oğurlayan usta bir oğrudur. Ona son bir iş təklif olunur: oğurluq yox, fikir əkmək — inception. Ailəsinə qovuşmaq üçün komandası ilə şüurun ən dərin qatlarına enir.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=YoHD9XEInc0"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000002"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Joker Qothem şəhərini xaosa sürükləyəndə Batman, Komissar Gordon və prokuror Harvey Dent birləşir. Lakin Jokerin əsl silahı zorakılıq deyil — insanların bir-birinə olan inamını qırmaqdır.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=EXeTwQWrcwY"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000003"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "J. Robert Oppenheimer Manhattan layihəsinə rəhbərlik edərək atom bombasını yaradır. Zəfərdən sonra isə yaratdığı silahın nəticələri və vicdan əzabı onu izləməyə başlayır.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=uYPbbksJxIg"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000004"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Yer üzü yaşayış üçün yararsızlaşdıqca bir qrup tədqiqatçı qurd dəliyindən keçərək bəşəriyyətə yeni ev axtarır. Zaman, cazibə və ata-övlad sevgisi arasında çətin seçim onları gözləyir.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=zSWdZVtXT7E"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000005"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İki muzdlu qatil, bir boksçu, cinayət aləminin patronu və onun arvadı — hekayələri gözlənilməz şəkildə kəsişir. Qeyri-xətti quruluşu ilə müasir kinonun gedişatını dəyişən əsər.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=s7EdQ4FqbhY"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000006"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Azadlığa buraxılmış qul Django, mükafat ovçusu Dr. Schultz ilə birləşərək arvadını qəddar plantasiya sahibinin əlindən xilas etməyə çalışır.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=0fUCuvNlOCg"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000007"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Barbie mükəmməl Barbieland dünyasını tərk edib real dünyaya çıxır. Kimlik, gözləntilər və özünü tapmaq haqqında rəngarəng və kinayəli bir səyahət başlayır.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=pBk4NYhWNMM"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000008"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "March bacılarının böyümə hekayəsi — sevgi, itki, yaradıcılıq və müstəqillik arasında öz yollarını axtaran dörd qadının portreti.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=AST2-4db4ic"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000009"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Proqramçı Neo yaşadığı dünyanın simulyasiya olduğunu öyrənir. Morpheus və Trinity ilə birlikdə maşınların qurduğu Matrisə qarşı üsyana qoşulur.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=vKQi3bBA1y8"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000010"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Post-apokaliptik səhrada Max və Furiosa zalım Immortan Joe-dan qaçan qadınları xilas etmək üçün dayanmadan davam edən vəhşi bir təqib yarışına girir.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=hEJnMQG9ev8"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000011"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Balerina Nina Qu Gölü tamaşasında baş rola seçilir. Mükəmməllik axtarışı və rəqabət onu tədricən öz şüurunun qaranlıq tərəfinə sürükləyir.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=5jaI1XOB-bs"
+                        },
+                        new
+                        {
+                            Id = new Guid("cccc0000-0000-0000-0000-000000000012"),
+                            CreatedDate = new DateTime(2026, 9, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Jordan Belfort-un Wall Street-də sıfırdan sərvətə, oradan da süquta gedən yolu. Xəyanət, həddindən artıq israf və FBI təqibi ilə dolu həqiqi hekayə.",
+                            IsDeleted = false,
+                            TrailerUrl = "https://www.youtube.com/watch?v=iszwuX1AK6A"
+                        });
+                });
+
+            modelBuilder.Entity("FridayFilm.Persistence.Users.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Fullname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("FridayFilm.Persistence.Users.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("RevokedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "ExpiresAtUtc");
+
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("GenreMovie", b =>
@@ -698,6 +1578,310 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasIndex("MoviesId");
 
                     b.ToTable("GenreMovie");
+
+                    b.HasData(
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000001"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000003"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000005"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000001"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000006"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000011"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000012"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000002"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000004")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000004")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000003"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000004")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000006"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000005")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000005")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000006")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000002"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000006")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000006"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000006")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000007"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000007")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000002"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000007")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000010"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000007")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000008")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000008"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000008")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000001"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000003"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000001"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000010")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000002"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000010")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000003"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000010")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000011")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000005"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000011")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000009"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000011")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000006"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000007"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000004"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        },
+                        new
+                        {
+                            GenresId = new Guid("bbbb0000-0000-0000-0000-000000000012"),
+                            MoviesId = new Guid("cccc0000-0000-0000-0000-000000000012")
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("ActorMovie", b =>
@@ -799,6 +1983,17 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Navigation("Movie");
                 });
 
+            modelBuilder.Entity("FridayFilm.Persistence.Users.RefreshToken", b =>
+                {
+                    b.HasOne("FridayFilm.Persistence.Users.ApplicationUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GenreMovie", b =>
                 {
                     b.HasOne("FridayFilm.Domain.Entities.Genre", null)
@@ -810,6 +2005,57 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.HasOne("FridayFilm.Domain.Entities.Movie", null)
                         .WithMany()
                         .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("FridayFilm.Persistence.Users.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("FridayFilm.Persistence.Users.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FridayFilm.Persistence.Users.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("FridayFilm.Persistence.Users.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -838,6 +2084,11 @@ namespace FridayFilm.Infrastructure.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("MovieDetail");
+                });
+
+            modelBuilder.Entity("FridayFilm.Persistence.Users.ApplicationUser", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

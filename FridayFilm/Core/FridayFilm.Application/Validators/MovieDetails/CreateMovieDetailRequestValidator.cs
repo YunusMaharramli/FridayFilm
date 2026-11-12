@@ -13,7 +13,9 @@ namespace FridayFilm.Application.Validators.MovieDetails
 
             RuleFor(x => x.TrailerUrl)
                 .NotEmpty().WithMessage("Treyler linki boş ola bilməz.")
-                .MaximumLength(500).WithMessage("Treyler linki maksimum 500 simvol ola bilər.");
+                .MaximumLength(500).WithMessage("Treyler linki maksimum 500 simvol ola bilər.")
+                .Must(value => Uri.TryCreate(value, UriKind.Absolute, out var uri) && uri.Scheme is "https" or "http")
+                .WithMessage("Treyler üçün düzgün HTTP və ya HTTPS URL daxil edin.");
         }
     }
 }

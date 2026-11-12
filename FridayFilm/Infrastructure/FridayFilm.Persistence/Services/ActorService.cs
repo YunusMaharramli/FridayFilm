@@ -8,6 +8,8 @@ using FridayFilm.Domain.Entities;
 using FridayFilm.Domain.Enums;
 using Microsoft.Extensions.DependencyInjection;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace FridayFilm.Application.Services;
 
 public class ActorService : IActorService
@@ -44,7 +46,7 @@ public class ActorService : IActorService
 
     public async Task<ActorResponse> GetByIdAsync(Guid id)
     {
-        var actor = await _readRepository.GetByIdAsync(id)
+        var actor = await _readRepository.Query().Include(x => x.Image).SingleOrDefaultAsync(x => x.Id == id)
             ?? throw new NotFoundException(
                 $"Actor with ID '{id}' was not found.");
 
@@ -136,7 +138,7 @@ public class ActorService : IActorService
 
     public async Task UpdateAsync(Guid id, UpdateActorRequest request)
     {
-        var actor = await _readRepository.GetByIdAsync(id)
+        var actor = await _readRepository.Query().Include(x => x.Image).SingleOrDefaultAsync(x => x.Id == id)
             ?? throw new NotFoundException(
                 $"Actor with ID '{id}' was not found.");
 
@@ -171,10 +173,8 @@ public class ActorService : IActorService
         // 3. Şəkil yenilənməsi prosesi
         if (request.Photo != null)
         {
-            if (actor.Image != null && !string.IsNullOrEmpty(actor.Image.PhotoUrl))
-            {
-                 _fileService.Delete(actor.Image.PhotoUrl);
-            }
+                // Keep the previous asset: a failed database save must not break the current image.
+
 
             string photoUrl = await _fileService.UploadAsync("images/actors", request.Photo);
           
@@ -194,7 +194,7 @@ public class ActorService : IActorService
 
     public async Task DeleteAsync(Guid id)
     {
-        var actor = await _readRepository.GetByIdAsync(id)
+        var actor = await _readRepository.Query().Include(x => x.Image).SingleOrDefaultAsync(x => x.Id == id)
             ?? throw new NotFoundException(
                 $"Actor with ID '{id}' was not found.");
 

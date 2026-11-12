@@ -9,6 +9,6 @@ public class PaginationRequest
     public int Size
     {
         get => _size;
-        set => _size = value > 10 ? 10 : value; 
+        set => _size = value > 100 ? 100 : value;
     }
 }

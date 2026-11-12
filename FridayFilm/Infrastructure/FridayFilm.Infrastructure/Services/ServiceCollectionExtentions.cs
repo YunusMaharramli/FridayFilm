@@ -1,9 +1,9 @@
-﻿using FridayFilm.Application.Abstracts.Repositories;
+﻿using FridayFilm.Application.Abstracts.Notifications;
+using FridayFilm.Application.Abstracts.Repositories;
 using FridayFilm.Application.Abstracts.Services;
-using FridayFilm.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FridayFilm.Infrastructure;
+namespace FridayFilm.Infrastructure.Services;
 
 public static class ServiceCollectionExtentions
 {
@@ -12,6 +12,8 @@ public static class ServiceCollectionExtentions
     {
         services.AddKeyedScoped<IFileService, LocalFileService>("local");
         services.AddKeyedScoped<IFileService, CloudinaryFileService>("cloudinary");
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

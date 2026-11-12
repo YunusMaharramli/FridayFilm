@@ -1,6 +1,8 @@
 ﻿using FridayFilm.Application.Abstracts.Services;
+using FridayFilm.Application.Authorization;
 using FridayFilm.Application.Pagination;
 using FridayFilm.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridayFilm.WebApi.Controllers;
@@ -16,6 +18,7 @@ public class ImagesController : ControllerBase
         _imageService = imageService;
     }
 
+    [Authorize(Policy = Permissions.Images.Read)]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] PaginationRequest request,

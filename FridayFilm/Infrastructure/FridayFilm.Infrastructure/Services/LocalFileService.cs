@@ -21,6 +21,8 @@ public sealed class LocalFileService : IFileService
 
         if (!allowedTypes.Contains(file.ContentType))
             throw new ArgumentException("Invalid file type", nameof(file));
+        if (file.Length > 5 * 1024 * 1024)
+            throw new ArgumentException("File size cannot exceed 5 MB", nameof(file));
 
         if (size.HasValue && file.Length > size.Value)
             throw new ArgumentException($"File size cannot exceed {size.Value} bytes", nameof(file));
@@ -34,10 +36,16 @@ public sealed class LocalFileService : IFileService
         string webRootPath = _environment.WebRootPath
             ?? Path.Combine(_environment.ContentRootPath, "wwwroot");
 
-        string directoryPath = Path.Combine(webRootPath, relativeDirectory);
+        string directoryPath = ResolveWithinRoot(webRootPath, relativeDirectory);
         Directory.CreateDirectory(directoryPath);
 
-        string fileName = $"{Guid.NewGuid():N}-{file.FileName}";
+        string extension = file.ContentType switch
+        {
+            "image/png" => ".png",
+            "image/webp" => ".webp",
+            _ => ".jpg"
+        };
+        string fileName = $"{Guid.NewGuid():N}{extension}";
         string filePath = Path.Combine(directoryPath, fileName);
 
         await using FileStream stream = new(
@@ -66,9 +74,18 @@ public sealed class LocalFileService : IFileService
         string webRootPath = _environment.WebRootPath
             ?? Path.Combine(_environment.ContentRootPath, "wwwroot");
 
-        string fullPath =Path.Combine(webRootPath, relativeDirectory);
+        string fullPath = ResolveWithinRoot(webRootPath, relativeDirectory);
 
         if (File.Exists(fullPath))
             File.Delete(fullPath);
+    }
+
+    private static string ResolveWithinRoot(string root, string relative)
+    {
+        var prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var target = Path.GetFullPath(Path.Combine(prefix, relative));
+        if (!target.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("File path must stay inside wwwroot.");
+        return target;
     }
 }

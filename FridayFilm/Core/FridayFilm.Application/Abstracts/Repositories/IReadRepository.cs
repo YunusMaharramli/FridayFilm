@@ -8,7 +8,7 @@ namespace FridayFilm.Application.Abstracts.Repositories;
 public interface IReadRepository<TEntity>
 { 
     Task<TEntity?> GetByIdAsync(Guid id);
-    Task<TEntity> GetAsync(
+    Task<TEntity?> GetAsync(
         Expression<Func<TEntity, bool>>? predicate = null,
         CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> GetAllAsync(

@@ -40,6 +40,8 @@ public sealed class CloudinaryFileService : IFileService
 
         if (file.Length == 0)
             throw new ArgumentException("Fayl boş ola bilməz.", nameof(file));
+        if (file.Length > 5 * 1024 * 1024 || file.ContentType is not ("image/jpeg" or "image/png" or "image/webp"))
+            throw new FridayFilm.Application.Exceptions.ValidationException("Maksimum 5 MB JPEG, PNG və ya WebP seçin.");
 
         if (size is <= 0)
             throw new ArgumentOutOfRangeException(

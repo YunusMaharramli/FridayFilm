@@ -55,7 +55,8 @@ public class ImageService : IImageService
 
         // 4. Səhifələməni (Skip/Take) tətbiq edib məlumatı yaddaşa çəkirik
         int skip = (request.Page - 1) * request.Size;
-        var images = await query.Skip(skip).Take(request.Size).ToListAsync();
+        var images = await query.OrderByDescending(x => x.CreatedDate).ThenBy(x => x.Id)
+            .Skip(skip).Take(request.Size).ToListAsync();
 
         // 5. Şəkilləri DTO-ya map edirik
         var mappedData = images.Select(img => new ImageResponse

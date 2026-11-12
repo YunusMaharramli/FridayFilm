@@ -14,15 +14,18 @@ namespace FridayFilm.WebApi.Filters
             {
                 // Xətaları toplayıb səliqəli bir formata salırıq
                 var errorsInModelState = context.ModelState
-                    .Where(x => x.Value.Errors.Count > 0)
+                    .Where(x => x.Value?.Errors.Count > 0)
                     .ToDictionary(
                         kvp => kvp.Key,
-                        kvp => kvp.Value.Errors.Select(x => x.ErrorMessage).ToArray()
+                        kvp => kvp.Value!.Errors.Select(x => x.ErrorMessage).ToArray()
                     );
 
                 var errorResponse = new
                 {
+                    StatusCode = 400,
                     Message = "Göndərilən məlumatlarda xəta var.",
+                    Path = context.HttpContext.Request.Path.Value,
+                    TraceId = context.HttpContext.TraceIdentifier,
                     Errors = errorsInModelState
                 };
 

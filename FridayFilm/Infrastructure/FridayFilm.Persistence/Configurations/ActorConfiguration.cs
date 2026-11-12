@@ -27,7 +27,8 @@ public class ActorConfiguration : IEntityTypeConfiguration<Actor>
             .HasMaxLength(2000);
 
         builder.Property(a => a.Gender)
-           .HasDefaultValue(Gender.Other);
+           .HasDefaultValue(Gender.Other)
+           .HasSentinel((Gender)0);
 
         // DÜZƏLDİLMİŞ ƏLAQƏ HİSSƏSİ
         builder.HasOne(a => a.Image)

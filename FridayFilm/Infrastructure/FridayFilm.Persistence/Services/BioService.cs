@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace FridayFilm.Application.Services
 {
     public class BioService : IBioService
@@ -46,7 +48,7 @@ namespace FridayFilm.Application.Services
 
         public async Task<BioResponse> GetByIdAsync(Guid id)
         {
-            var bio = await _readRepository.GetByIdAsync(id)
+            var bio = await _readRepository.Query().Include(x => x.Logo).SingleOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException(
                     $"Bio with ID '{id}' was not found.");
 
@@ -90,7 +92,7 @@ namespace FridayFilm.Application.Services
 
         public async Task UpdateAsync(Guid id, UpdateBioRequest request)
         {
-            var bio = await _readRepository.GetByIdAsync(id)
+            var bio = await _readRepository.Query().Include(x => x.Logo).SingleOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException(
                     $"Bio with ID '{id}' was not found.");
 
@@ -128,10 +130,8 @@ namespace FridayFilm.Application.Services
             // Şəkil (Loqo) yenilənməsi prosesi
             if (request.LogoPhoto != null)
             {
-                if (bio.Logo != null && !string.IsNullOrEmpty(bio.Logo.PhotoUrl))
-                {
-                    _fileService.Delete(bio.Logo.PhotoUrl);
-                }
+                // Keep the previous asset: a failed database save must not break the current image.
+
 
                 string photoUrl = await _fileService.UploadAsync("images/logos", request.LogoPhoto);
 
@@ -152,7 +152,7 @@ namespace FridayFilm.Application.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            var bio = await _readRepository.GetByIdAsync(id)
+            var bio = await _readRepository.Query().Include(x => x.Logo).SingleOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException(
                     $"Bio with ID '{id}' was not found.");
 

@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace FridayFilm.Application.Services
 {
     public class DirectorService : IDirectorService
@@ -48,7 +50,7 @@ namespace FridayFilm.Application.Services
 
         public async Task<DirectorResponse> GetByIdAsync(Guid id)
         {
-            var director = await _readRepository.GetByIdAsync(id)
+            var director = await _readRepository.Query().Include(x => x.Image).SingleOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException(
                     $"Director with ID '{id}' was not found.");
 
@@ -154,7 +156,7 @@ namespace FridayFilm.Application.Services
 
         public async Task UpdateAsync(Guid id, UpdateDirectorRequest request)
         {
-            var director = await _readRepository.GetByIdAsync(id)
+            var director = await _readRepository.Query().Include(x => x.Image).SingleOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException(
                     $"Director with ID '{id}' was not found.");
 
@@ -187,10 +189,8 @@ namespace FridayFilm.Application.Services
             // 3. Şəkil yenilənməsi və köhnənin silinməsi
             if (request.Photo != null)
             {
-                if (director.Image != null && !string.IsNullOrEmpty(director.Image.PhotoUrl))
-                {
-                    _fileService.Delete(director.Image.PhotoUrl);
-                }
+                // Keep the previous asset: a failed database save must not break the current image.
+
 
                 string photoUrl = await _fileService.UploadAsync("images/directors", request.Photo);
 
@@ -211,7 +211,7 @@ namespace FridayFilm.Application.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            var director = await _readRepository.GetByIdAsync(id)
+            var director = await _readRepository.Query().Include(x => x.Image).SingleOrDefaultAsync(x => x.Id == id)
                 ?? throw new NotFoundException(
                     $"Director with ID '{id}' was not found.");
 
